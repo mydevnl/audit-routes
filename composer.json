@@ -1,0 +1,62 @@
+{
+    "name": "mydevnl/audit-routes",
+    "description": "Security auditing for Laravel routes.",
+    "version": "0.1.1",
+    "keywords": [
+        "Route Auditing",
+        "Audit Reports",
+        "Security Compliance",
+        "Audit",
+        "Routes",
+        "Security",
+        "Laravel",
+        "Routing",
+        "Middleware",
+        "Testing",
+        "Test Coverage",
+        "PHPUnit",
+        "Permission Checks",
+        "Continuous Integration",
+        "Code quality",
+        "Metrics"
+    ],
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jim Brouwer",
+            "email": "jimbrouwer@live.nl"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/console": "^7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/filesystem": "^7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/routing": "^7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0"
+    },
+    "require-dev": {
+        "nikic/php-parser": "^5.1",
+        "phpunit/phpunit": "^11.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "MyDev\\AuditRoutes\\": "src/"
+        }
+    },
+    "suggest": {
+        "irazasyed/larasupport": "Needed to publish the package configuration in Lumen"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "v1-dev"
+        },
+        "laravel": {
+            "providers": [
+                "MyDev\\AuditRoutes\\AuditRoutesServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
