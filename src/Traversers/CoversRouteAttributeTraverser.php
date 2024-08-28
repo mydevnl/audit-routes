@@ -45,7 +45,7 @@ class CoversRouteAttributeTraverser extends NodeVisitorAbstract
             {
             }
         
-            public function enterNode(Node $node): null
+            public function enterNode(Node $node): null | int
             {
                 if ($node instanceof String_) {
                     $this->auditor->markRouteOccurrence($node->value);

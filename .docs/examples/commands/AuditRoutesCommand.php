@@ -35,8 +35,7 @@ class AuditRoutesCommand extends Command
                 PermissionAuditor::class => -100,
                 TestAuditor::make()->setWeight(250)->setPenalty(-10000)->setLimit(2333),
                 MiddlewareAuditor::make(['auth'])
-                    ->when(fn (RouteInterface $route): bool => !str_starts_with($route->getName(), 'api'))
-                    ->ignoreRoutes(['login', 'password.update', 'password.request', 'password.reset', 'password-link.store'])
+                    ->ignoreRoutes(['login', 'password*', 'api.*'])
                     ->setPenalty(-1000)
                     ->setWeight(10),
                 MiddlewareAuditor::make(['auth:sanctum'])

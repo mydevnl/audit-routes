@@ -1,6 +1,6 @@
 {
     "name": "mydevnl/audit-routes",
-    "description": "Security auditing for Laravel routes.",
+    "description": "Gain insights into the security and protection of your Laravel routes. Audit Routes is your new best friend for keeping your application rock-solid!",
     "version": "0.1.1",
     "keywords": [
         "Route Auditing",
@@ -20,7 +20,7 @@
         "Code quality",
         "Metrics"
     ],
-    "type": "package",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -41,7 +41,8 @@
     },
     "autoload": {
         "psr-4": {
-            "MyDev\\AuditRoutes\\": "src/"
+            "MyDev\\AuditRoutes\\": "src/",
+            "MyDev\\AuditRoutes\\Examples\\Commands\\": ".docs/examples/commands/"
         }
     },
     "suggest": {

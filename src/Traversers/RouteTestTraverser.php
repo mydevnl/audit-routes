@@ -32,7 +32,7 @@ class RouteTestTraverser extends NodeVisitorAbstract
         $this->actingMethods = Config::get('audit-routes.tests.acting-methods');
     }
 
-    public function enterNode(Node $node): null
+    public function enterNode(Node $node): null | int
     {
         match ($node::class) {
             Assign::class      => $this->handleVariabeleDeclaration($node),

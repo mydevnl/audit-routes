@@ -23,10 +23,16 @@ This package is built for Laravel, with upcoming support for Symfony, and is des
 You can install the package via Composer:
 
 ```bash
-composer require mydevnl/audit-routes --dev
+composer require mydevnl/audit-routes:dev-main --dev
 ```
 
-After installation, publish the configuration file using:
+After installation, simply run the `route:audit` command:
+
+```bash
+php artisan route:audit -vvv
+```
+
+Optionally publish the configuration file:
 
 ```bash
 php artisan vendor:publish --tag=audit-routes-config
@@ -34,32 +40,25 @@ php artisan vendor:publish --tag=audit-routes-config
 
 ## Usage
 
-Once installed, setting up custom commands is a breeze. The package provides flexible options that allow you to tailor your route audits to fit your application's specific needs. To help you get started, we’ve included an example that demonstrate how to leverage these options effectively:
+Once installed, setting up custom commands is a breeze. The package provides flexible options that allow you to tailor your route audits to fit your application's specific needs. To help you get started, a default command has been included to demonstrate how to leverage these options effectively:
 
 ```php
-public function handle(): void
-{
-    $output = ConsoleFactory::build($this->getOutput()->getVerbosity(), $this->output);
-
-    $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
-        ->setBenchmark(1000)
-        ->run([
-            PolicyAuditor::class => 100,
-            PermissionAuditor::class => -100,
-            TestAuditor::make()->setWeight(250)->setPenalty(-10000)->setLimit(1500),
-            MiddlewareAuditor::make(['auth'])
-                ->ignoreRoutes(['login', 'password*', 'api.*'])
-                ->setPenalty(-1000)
-                ->setWeight(10),
-            MiddlewareAuditor::make(['auth:sanctum'])
-                ->when(fn (RouteInterface $route): bool => str_starts_with($route->getName(), 'api'))
-                ->ignoreRoutes(['api.password', 'api.login', 'api.register'])
-                ->setPenalty(-1000)
-                ->setWeight(10),
-        ]);
-
-    $output->generate($result);
-}
+AuditRoutes::for($this->router->getRoutes()->getRoutes())
+    ->setBenchmark(1000)
+    ->run([
+        PolicyAuditor::class => 100,
+        PermissionAuditor::class => -100,
+        TestAuditor::make()->setWeight(250)->setPenalty(-10000)->setLimit(2333),
+        MiddlewareAuditor::make(['auth'])
+            ->ignoreRoutes(['login', 'password*', 'api.*'])
+            ->setPenalty(-1000)
+            ->setWeight(10),
+        MiddlewareAuditor::make(['auth:sanctum'])
+            ->when(fn (RouteInterface $route): bool => str_starts_with($route->getName(), 'api'))
+            ->ignoreRoutes(['api.password', 'api.login', 'api.register'])
+            ->setPenalty(-1000)
+            ->setWeight(10),
+    ]);
 ```
 
 ## Testing
