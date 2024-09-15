@@ -26,13 +26,21 @@ class RouteTestTraverser extends NodeVisitorAbstract
     /** @var array<int, string> $actingMethods */
     protected array $actingMethods;
 
+    /**
+     * @param TestAuditor $auditor
+     * @return void
+     */
     public function __construct(private readonly TestAuditor $auditor)
     {
         $this->routeMethod = Config::get('audit-routes.tests.route-method');
         $this->actingMethods = Config::get('audit-routes.tests.acting-methods');
     }
 
-    public function enterNode(Node $node): null | int
+    /**
+     * @param Node $node
+     * @return ?int
+     */
+    public function enterNode(Node $node): ?int
     {
         match ($node::class) {
             Assign::class      => $this->handleVariabeleDeclaration($node),
@@ -44,6 +52,10 @@ class RouteTestTraverser extends NodeVisitorAbstract
         return null;
     }
 
+    /**
+     * @param Assign $node
+     * @return void
+     */
     protected function handleVariabeleDeclaration(Assign $node): void
     {
         if (!$node->var instanceof Variable || !$node->expr instanceof String_) {
@@ -53,6 +65,10 @@ class RouteTestTraverser extends NodeVisitorAbstract
         $this->auditor->declareVariable(strval($node->var->name), $node->expr->value);
     }
 
+    /**
+     * @param MethodCall $node
+     * @return void
+     */
     protected function handleMethodCall(MethodCall $node): void
     {
         if (!in_array($node->name->toString(), $this->actingMethods)) {

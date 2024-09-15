@@ -13,6 +13,10 @@ class MiddlewareAuditor implements AuditorInterface
 
     protected array $middlewares = [];
 
+    /**
+     * @param RouteInterface $route
+     * @return int
+     */
     public function handle(RouteInterface $route): int
     {
         $implementedMiddlewares = $route->getMiddlewares();
@@ -27,6 +31,10 @@ class MiddlewareAuditor implements AuditorInterface
         return $this->getScore($implementationCount);
     }
 
+    /**
+     * @param array<int | string, mixed> $arguments
+     * @return self
+     */
     public function setArguments(array $arguments): self
     {
         $this->middlewares = $arguments;

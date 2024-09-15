@@ -12,7 +12,10 @@ trait ConditionalAuditable
     /** @var array<int, Closure(RouteInterface): bool> $conditions */
     protected array $conditions = [];
 
-    /** @param Closure(RouteInterface): bool $condition */
+    /**
+     * @param Closure(RouteInterface): bool $condition
+     * @return self
+     */
     public function when(Closure $condition): self
     {
         $this->conditions[] = $condition;
@@ -20,6 +23,10 @@ trait ConditionalAuditable
         return $this;
     }
 
+    /**
+     * @param RouteInterface $route
+     * @return bool
+     */
     protected function validateConditions(RouteInterface $route): bool
     {
         foreach ($this->conditions as $condition) {

@@ -7,6 +7,7 @@ namespace MyDev\AuditRoutes;
 use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
+use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Repositories\RouteFactory;
 use MyDev\AuditRoutes\Repositories\RouteInterface;
 use MyDev\AuditRoutes\Traits\IgnoresRoutes;
@@ -20,6 +21,10 @@ class AuditRoutes
     /** @var array<int, RouteInterface> $routes */
     protected array $routes;
 
+    /**
+     * @param iterable $routes
+     * @return void
+     */
     public function __construct(iterable $routes)
     {
         $this->routes = RouteFactory::collection($routes);
@@ -27,6 +32,10 @@ class AuditRoutes
         $this->defaultIgnoredRoutes = Config::get('audit-routes.ignored-routes', []);
     }
 
+    /**
+     * @param iterable $routes
+     * @return self
+     */
     public static function for(iterable $routes): self
     {
         return new self($routes);
@@ -34,23 +43,27 @@ class AuditRoutes
 
     /**
      * @param  array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
-     * @return array<int, AuditedRoute>
+     * @return AuditedRouteCollection
      */
-    public function run(array $auditors): array
+    public function run(array $auditors): AuditedRouteCollection
     {
-        $auditedRoutes = [];
+        $collection = new AuditedRouteCollection();
 
         foreach ($this->routes as $route) {
             if (!$this->validateRoute($route)) {
                 continue;
             }
 
-            $auditedRoutes[] = AuditedRoute::for($route, $this->benchmark)->audit($auditors);
+            $collection->push(AuditedRoute::for($route, $this->benchmark)->audit($auditors));
         }
 
-        return $auditedRoutes;
+        return $collection;
     }
 
+    /**
+     * @param int $benchmark
+     * @return self
+     */
     public function setBenchmark(int $benchmark): self
     {
         $this->benchmark = $benchmark;

@@ -19,11 +19,19 @@ use PhpParser\NodeVisitorAbstract;
  */
 class CoversRouteAttributeTraverser extends NodeVisitorAbstract
 {
+    /**
+     * @param TestAuditor $auditor
+     * @return void
+     */
     public function __construct(private readonly TestAuditor $auditor)
     {
     }
 
-    public function enterNode(Node $node): null | int
+    /**
+     * @param Node $node
+     * @return ?int
+     */
+    public function enterNode(Node $node): ?int
     {
         if (!$node instanceof Attribute) {
             return null;
@@ -38,6 +46,10 @@ class CoversRouteAttributeTraverser extends NodeVisitorAbstract
         return NodeVisitor::DONT_TRAVERSE_CHILDREN;
     }
 
+    /**
+     * @param Attribute $node
+     * @return void
+     */
     protected function traverseAttributeArguments(Attribute $node): void
     {
         (new NodeTraverser(new class ($this->auditor) extends NodeVisitorAbstract {

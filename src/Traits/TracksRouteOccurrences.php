@@ -9,6 +9,10 @@ trait TracksRouteOccurrences
     /** @var array<string, int> $routeOccurrences */
     private array $routeOccurrences = [];
 
+    /**
+     * @param string $route
+     * @return void
+     */
     public function markRouteOccurrence(string $route): void
     {
         if (!isset($this->routeOccurrences[$route])) {
@@ -17,6 +21,10 @@ trait TracksRouteOccurrences
         $this->routeOccurrences[$route]++;
     }
 
+    /**
+     * @param string $route
+     * @return int
+     */
     public function getRouteOccurrence(string $route): int
     {
         return $this->routeOccurrences[$route] ?? 0;

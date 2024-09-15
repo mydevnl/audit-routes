@@ -6,15 +6,24 @@ namespace MyDev\AuditRoutes\Repositories;
 
 class StringableRoute implements RouteInterface
 {
+    /**
+     * @param string $route
+     * @return void
+     */
     public function __construct(protected string $route)
     {
     }
 
+    /**
+     * @param string $route
+     * @return self
+     */
     public static function for(string $route): self
     {
         return new self($route);
     }
 
+    /** @return string */
     public function getName(): string
     {
         return $this->route;
@@ -26,6 +35,7 @@ class StringableRoute implements RouteInterface
         return [];
     }
 
+    /** @return string */
     public function getClass(): string
     {
         return gettype($this->route);

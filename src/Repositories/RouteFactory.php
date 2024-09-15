@@ -12,7 +12,10 @@ use Symfony\Component\Routing\Route as SymfonyRoutingRoute;
 
 class RouteFactory
 {
-    /** @return array<RouteInterface> */
+    /**
+     * @param iterable $routes
+     * @return array<int, RouteInterface>
+     */
     public static function collection(iterable $routes): array
     {
         $mappedRoutes = [];
@@ -23,7 +26,12 @@ class RouteFactory
         return $mappedRoutes;
     }
 
-    public static function build(mixed $route, string | int | null $name = null): RouteInterface
+    /**
+     * @param mixed $route
+     * @param null | string | int $name
+     * @return RouteInterface
+     */
+    public static function build(mixed $route, null | string | int $name = null): RouteInterface
     {
         if (is_string($route)) {
             $route = self::resolveStringableRoute($route);
@@ -38,6 +46,10 @@ class RouteFactory
         };
     }
 
+    /**
+     * @param iterable $routes
+     * @return iterable
+     */
     protected static function resolveToAllRoutes(iterable $routes): iterable
     {
         if ($routes === ['*']) {
@@ -49,6 +61,10 @@ class RouteFactory
         return $routes;
     }
 
+    /**
+     * @param string $route
+     * @return IlluminateRoutingRoute | string
+     */
     protected static function resolveStringableRoute(string $route): IlluminateRoutingRoute | string
     {
         try {

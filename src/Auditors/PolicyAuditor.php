@@ -11,6 +11,10 @@ class PolicyAuditor implements AuditorInterface
 {
     use Auditable;
 
+    /**
+     * @param RouteInterface $route
+     * @return int
+     */
     public function handle(RouteInterface $route): int
     {
         $middlewares = array_filter($route->getMiddlewares(), function (string | callable $middleware): bool {

@@ -29,4 +29,7 @@ return [
             'json',
         ],
     ],
+    'output' => [
+        'directory' => 'output',
+    ],
 ];

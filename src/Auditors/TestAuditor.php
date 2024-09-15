@@ -25,6 +25,7 @@ class TestAuditor implements AuditorInterface
     private Parser $parser;
     private NodeTraverser $traverser;
 
+    /** @return void */
     public function __construct()
     {
         $this->setUpParser();
@@ -38,11 +39,16 @@ class TestAuditor implements AuditorInterface
         }
     }
 
+    /**
+     * @param RouteInterface $route
+     * @return int
+     */
     public function handle(RouteInterface $route): int
     {
         return $this->getScore($this->getRouteOccurrence($route->getName()));
     }
 
+    /** @return void */
     protected function setUpParser(): void
     {
         $this->parser = (new ParserFactory())->createForNewestSupportedVersion();

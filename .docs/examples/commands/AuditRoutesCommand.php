@@ -11,12 +11,12 @@ use MyDev\AuditRoutes\Auditors\TestAuditor;
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
 use MyDev\AuditRoutes\AuditRoutes;
-use MyDev\AuditRoutes\Output\ConsoleFactory;
+use MyDev\AuditRoutes\Output\OutputFactory;
 use MyDev\AuditRoutes\Repositories\RouteInterface;
 
 class AuditRoutesCommand extends Command
 {
-    protected $signature = 'route:audit';
+    protected $signature = 'route:audit {--export}';
     protected $description = 'Run security auditing for Laravel routes';
 
     public function __construct(private Router $router)
@@ -26,7 +26,9 @@ class AuditRoutesCommand extends Command
 
     public function handle(): void
     {
-        $output = ConsoleFactory::build($this->getOutput()->getVerbosity(), $this->output);
+        $output = OutputFactory::channel($this->output)
+            ->withExporter($this->option('export'))
+            ->build();
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
             ->setBenchmark(1000)

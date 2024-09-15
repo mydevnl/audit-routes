@@ -10,7 +10,11 @@ use ReflectionClass;
 
 class ClassDiscovery
 {
-    /** @return array<int, string> */
+    /**
+     * @param string|ReflectionClass $class
+     * @param string $directory
+     * @return array<int, string>
+     */
     public static function subclassesOf(string|ReflectionClass $class, string $directory = ''): array
     {
         return self::find(
@@ -19,7 +23,11 @@ class ClassDiscovery
         );
     }
 
-    /** @return array<int, string> */
+    /**
+     * @param string|ReflectionClass $class
+     * @param string $directory
+     * @return array<int, string>
+     */
     public static function implemenationsOf(string|ReflectionClass $class, string $directory = ''): array
     {
         return self::find(
@@ -28,13 +36,17 @@ class ClassDiscovery
         );
     }
 
-    /** @param class-string|object $class */
+    /**
+     * @param class-string|object $class
+     * @return string
+     */
     public static function source(string|object $class): string
     {
         return File::get((new ReflectionClass($class))->getFileName());
     }
 
     /**
+     * @param string $directory
      * @param  Closure(ReflectionClass): bool $callback
      * @return array<int, string>
      */
@@ -53,6 +65,10 @@ class ClassDiscovery
         return $found;
     }
 
+    /**
+     * @param string $filePath
+     * @return string
+     */
     protected static function toPsr4Namespace(string $filePath): string
     {
         $partialName = explode('/', str_replace(getcwd(), '', $filePath));

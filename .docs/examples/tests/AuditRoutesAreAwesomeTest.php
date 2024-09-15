@@ -6,6 +6,7 @@ namespace Tests\AuditRoutes\Examples;
 
 use MyDev\AuditRoutes\Auditors\PermissionAuditor;
 use MyDev\AuditRoutes\Auditors\PolicyAuditor;
+use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Repositories\RouteInterface;
 use MyDev\AuditRoutes\Testing\Concerns\AssertsAuditRoutes;
 use PHPUnit\Framework\Attributes\Test;
@@ -63,8 +64,8 @@ class AuditRoutesAreAwesomeTest extends TestCase
     #[Test]
     public function no_routes_are_protected_by_permissions(): void
     {
-        $message = function (array $failedRoutes): string {
-            $lines = ['The following routes are protected by permissions:', ...$failedRoutes];
+        $message = function (AuditedRouteCollection $failedRoutes): string {
+            $lines = ['The following routes are protected by permissions:', ...$failedRoutes->get()];
 
             return implode("\n\t", $lines);
         };

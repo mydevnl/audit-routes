@@ -7,6 +7,7 @@ namespace MyDev\AuditRoutes\Testing\Concerns;
 use Closure;
 use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\AuditRoutes;
+use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Callback;
@@ -18,8 +19,10 @@ trait AssertsAuditRouteStatus
      *
      * @param iterable                                                                                               $routes
      * @param array<class-string<AuditorInterface>, int>|array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
-     * @param string | Closure(array<string>): string                                                                $message
+     * @param string | Closure(AuditedRouteCollection): string                                                       $message
      * @param array<int, string>                                                                                     $ignoredRoutes
+     * @param int                                                                                                    $benchmark
+     * @return self
      */
     protected function assertAuditRoutesOk(
         iterable $routes,
@@ -41,19 +44,16 @@ trait AssertsAuditRouteStatus
     /**
      * Callback for asserting none of the audited routes have a failed status.
      *
-     * @param array<int, \MyDev\AuditRoutes\Entities\AuditedRoute> $auditedRoutes
+     * @param AuditedRouteCollection $auditedRoutes
+     * @param string | Closure(AuditedRouteCollection): void $message
+     * @return Callback
      */
-    protected function noAuditRouteHasFailed(array $auditedRoutes, string | callable $message): Callback
+    protected function noAuditRouteHasFailed(AuditedRouteCollection $auditedRoutes, string | Closure $message): Callback
     {
         return Assert::callback(function () use ($auditedRoutes, $message): bool {
-            $failedRoutes = [];
-            foreach ($auditedRoutes as $auditedRoute) {
-                if ($auditedRoute->hasStatus(AuditStatus::Failed)) {
-                    $failedRoutes[] = $auditedRoute->getName();
-                }
-            }
+            $failedRoutes = $auditedRoutes->where('status', AuditStatus::Failed->value);
 
-            if ($failedRoutes === []) {
+            if ($failedRoutes->isEmpty()) {
                 return true;
             }
 

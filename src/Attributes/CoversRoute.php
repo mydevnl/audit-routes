@@ -9,12 +9,16 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 final readonly class CoversRoute
 {
-    /** @param string | array<int, string> $routes */
+    /**
+     * @param string | array<int, string> $routes
+     * @return void
+     */
     public function __construct(private string|array $routes)
     {
     }
 
-    public function routes(): string
+    /**  @return string | array<int, string> */
+    public function routes(): string | array
     {
         return $this->routes;
     }

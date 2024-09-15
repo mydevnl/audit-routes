@@ -22,6 +22,10 @@ trait IgnoresRoutes
         return $this;
     }
 
+    /**
+     * @param RouteInterface $route
+     * @return bool
+     */
     protected function validateRoute(RouteInterface $route): bool
     {
         if (empty($route->getName())) {
