@@ -7,7 +7,7 @@ namespace Tests\AuditRoutes\Examples;
 use MyDev\AuditRoutes\Auditors\PermissionAuditor;
 use MyDev\AuditRoutes\Auditors\PolicyAuditor;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Testing\Concerns\AssertsAuditRoutes;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -51,7 +51,7 @@ class AuditRoutesAreAwesomeTest extends TestCase
             ['*'],
             ['auth:sanctum'],
             ignoredRoutes: ['api.login'],
-            when: fn (RouteInterface $route): bool => str_starts_with($route->getName(), 'api'),
+            when: fn (RouteInterface $route): bool => str_starts_with($route->getIdentifier(), 'api'),
         );
     }
 

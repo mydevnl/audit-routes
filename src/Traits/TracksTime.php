@@ -6,6 +6,7 @@ namespace MyDev\AuditRoutes\Traits;
 
 trait TracksTime
 {
+    /** @var float $startTime */
     protected float $startTime = 0;
 
     /** @return float */

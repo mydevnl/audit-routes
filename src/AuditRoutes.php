@@ -8,14 +8,15 @@ use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
-use MyDev\AuditRoutes\Repositories\RouteFactory;
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteFactory;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Traits\IgnoresRoutes;
 
 class AuditRoutes
 {
     use IgnoresRoutes;
 
+    /** @var int $benchmark */
     protected int $benchmark;
 
     /** @var array<int, RouteInterface> $routes */
@@ -23,6 +24,7 @@ class AuditRoutes
 
     /**
      * @param iterable $routes
+     * @throws \InvalidArgumentException
      * @return void
      */
     public function __construct(iterable $routes)
@@ -43,6 +45,7 @@ class AuditRoutes
 
     /**
      * @param  array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
+     * @throws \InvalidArgumentException
      * @return AuditedRouteCollection
      */
     public function run(array $auditors): AuditedRouteCollection

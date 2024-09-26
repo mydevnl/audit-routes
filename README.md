@@ -2,7 +2,7 @@
 
 This PHP Package provides a streamlined approach to gaining insights into the security and protection of your application's routes. In just a few seconds, you can assess critical aspects such as:
 
-- **Test Coverage**: Ensure all of your routes have tests coverage
+- **Test Coverage**: Ensure all of your routes have test coverage
 - **Authentication**: Check which routes require authentication
 - **Permissions**: Verify that permission or policy checks are in place
 - **Middleware**: Confirm that the necessary middleware is applied
@@ -54,7 +54,7 @@ AuditRoutes::for($this->router->getRoutes()->getRoutes())
             ->setPenalty(-1000)
             ->setWeight(10),
         MiddlewareAuditor::make(['auth:sanctum'])
-            ->when(fn (RouteInterface $route): bool => str_starts_with($route->getName(), 'api'))
+            ->when(fn (RouteInterface $route): bool => str_starts_with($route->getIdentifier(), 'api'))
             ->ignoreRoutes(['api.password', 'api.login', 'api.register'])
             ->setPenalty(-1000)
             ->setWeight(10),

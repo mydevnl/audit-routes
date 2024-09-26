@@ -19,7 +19,7 @@ trait AssertsRouteTested
      * @param int                                                                  $times
      * @param array<int, string>                                                   $ignoredRoutes
      * @param null | string | Closure(AuditedRouteCollection): string              $message
-     * @param null | Closure(\MyDev\AuditRoutes\Repositories\RouteInterface): bool $when
+     * @param null | Closure(\MyDev\AuditRoutes\Routes\RouteInterface): bool $when
      * @return self
      */
     protected function assertRoutesAreTested(

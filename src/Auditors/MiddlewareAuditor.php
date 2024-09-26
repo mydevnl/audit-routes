@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Auditors;
 
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Traits\Auditable;
 
 class MiddlewareAuditor implements AuditorInterface
 {
     use Auditable;
 
+    /** @var array<int | string, mixed> $middlewares */
     protected array $middlewares = [];
 
     /**

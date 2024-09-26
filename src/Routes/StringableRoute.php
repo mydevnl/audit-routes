@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Repositories;
+namespace MyDev\AuditRoutes\Routes;
 
 class StringableRoute implements RouteInterface
 {
@@ -25,6 +25,18 @@ class StringableRoute implements RouteInterface
 
     /** @return string */
     public function getName(): string
+    {
+        return $this->route;
+    }
+
+    /** @return string */
+    public function getUri(): string
+    {
+        return $this->route;
+    }
+
+    /** @return string */
+    public function getIdentifier(): string
     {
         return $this->route;
     }

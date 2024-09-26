@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -13,8 +13,13 @@ trait Auditable
     use ConditionalAuditable;
     use IgnoresRoutes;
 
+    /** @var int $routeMethod */
     protected int $weight = 1;
+
+    /** @var int $penalty */
     protected int $penalty = 0;
+
+    /** @var int $limit */
     protected int $limit = PHP_INT_MAX;
 
     /**
@@ -34,12 +39,12 @@ trait Auditable
 
     /**
      * @param RouteInterface $route
-     * @return int
+     * @return ?int
      */
-    public function run(RouteInterface $route): int
+    public function run(RouteInterface $route): ?int
     {
         if (!$this->validate($route)) {
-            return 0;
+            return null;
         }
 
         return $this->handle($route);

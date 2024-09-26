@@ -11,6 +11,9 @@ use Symfony\Component\Console\Style\OutputStyle;
 
 class JsonOutput implements ExportInterface
 {
+    /** @var array<int, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> $aggregators */
+    protected array $aggregators = [];
+
     /**
      * @param OutputStyle $output
      * @return void
@@ -27,15 +30,29 @@ class JsonOutput implements ExportInterface
     {
         $path = strval(Config::get('audit-routes.output.directory'));
         $filename = 'report.json';
-
-        $json = json_encode($auditedRoutes->sort()->get(), JSON_PRETTY_PRINT);
+        $fullPath = $path . DIRECTORY_SEPARATOR . $filename;
 
         if (!Storage::directoryExists($path)) {
             Storage::createDirectory($path);
         }
 
-        Storage::put("{$path}/{$filename}", $json);
+        $result = [
+            'totals' => $auditedRoutes->aggregate(...$this->aggregators),
+            'routes' => $auditedRoutes->sort()->get(),
+        ];
 
-        $this->output->section('Report exported to: ' . Storage::path("{$path}/{$filename}"));
+        $json = json_encode($result, JSON_PRETTY_PRINT);
+
+        Storage::put($fullPath, $json);
+
+        $this->output->section('Report exported to: ' . Storage::path($fullPath));
+    }
+
+    /** @param array<int, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> $aggregators */
+    public function setAggregators(array $aggregators): self
+    {
+        $this->aggregators = $aggregators;
+
+        return $this;
     }
 }

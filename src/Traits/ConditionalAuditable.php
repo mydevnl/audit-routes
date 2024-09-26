@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Traits;
 
 use Closure;
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 
 trait ConditionalAuditable
 {

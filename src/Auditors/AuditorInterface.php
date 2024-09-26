@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Auditors;
 
 use JsonSerializable;
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 
 interface AuditorInterface extends JsonSerializable
 {
@@ -17,9 +17,9 @@ interface AuditorInterface extends JsonSerializable
 
     /**
      * @param RouteInterface $route
-     * @return int
+     * @return ?int
      */
-    public function run(RouteInterface $route): int;
+    public function run(RouteInterface $route): ?int;
 
     /**
      * @param RouteInterface $route

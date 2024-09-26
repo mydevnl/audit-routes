@@ -2,12 +2,18 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Repositories;
+namespace MyDev\AuditRoutes\Routes;
 
 interface RouteInterface
 {
+    /** @return ?string */
+    public function getName(): ?string;
+
     /** @return string */
-    public function getName(): string;
+    public function getUri(): string;
+
+    /** @return string */
+    public function getIdentifier(): string;
 
     /** @return array<int, string | callable> */
     public function getMiddlewares(): array;

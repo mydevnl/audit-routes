@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Repositories;
+namespace MyDev\AuditRoutes\Routes;
 
 use Exception;
 use Illuminate\Routing\Route as IlluminateRoutingRoute;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
+use InvalidArgumentException;
 use Symfony\Component\Routing\Route as SymfonyRoutingRoute;
 
 class RouteFactory
 {
     /**
      * @param iterable $routes
+     * @throws InvalidArgumentException
      * @return array<int, RouteInterface>
      */
     public static function collection(iterable $routes): array
@@ -29,6 +31,7 @@ class RouteFactory
     /**
      * @param mixed $route
      * @param null | string | int $name
+     * @throws InvalidArgumentException
      * @return RouteInterface
      */
     public static function build(mixed $route, null | string | int $name = null): RouteInterface
@@ -42,7 +45,7 @@ class RouteFactory
             $route instanceof IlluminateRoutingRoute => new IlluminateRoute($route),
             $route instanceof SymfonyRoutingRoute    => new SymfonyRoute($name, $route),
             $route instanceof RouteInterface         => $route,
-            default                                  => throw new Exception('Unsupported route'),
+            default                                  => throw new InvalidArgumentException('Unsupported route'),
         };
     }
 

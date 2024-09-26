@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Repositories;
+namespace MyDev\AuditRoutes\Routes;
 
 use Symfony\Component\Routing\Route;
 
@@ -27,10 +27,22 @@ class SymfonyRoute implements RouteInterface
         return new self($name, $route);
     }
 
-    /** @return string */
-    public function getName(): string
+    /** @return ?string */
+    public function getName(): ?string
     {
-        return (string) $this->name;
+        return $this->name;
+    }
+
+    /** @return string */
+    public function getUri(): string
+    {
+        return $this->route->getPath();
+    }
+
+    /** @return string */
+    public function getIdentifier(): string
+    {
+        return $this->getName() ?? $this->getUri();
     }
 
     /** @return array<int, string | callable> */

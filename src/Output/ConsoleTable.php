@@ -29,10 +29,10 @@ class ConsoleTable implements OutputInterface
             'Status',
             'Route',
             'Score',
-        ], array_map(fn (AuditedRoute $route): array => [
-            $route->hasStatus(AuditStatus::Failed) ? '✖' : '✓',
-            $route->getName(),
-            $route->getScore(),
+        ], array_map(fn (AuditedRoute $auditedRoute): array => [
+            $auditedRoute->hasStatus(AuditStatus::Failed) ? '✖' : '✓',
+            $auditedRoute->getDisplayName(),
+            $auditedRoute->getScore(),
         ], $auditedRoutes->sort()->get()));
     }
 }

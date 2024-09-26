@@ -6,10 +6,12 @@ namespace MyDev\AuditRoutes\Entities;
 
 use Closure;
 use Iterator;
+use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
 use UnexpectedValueException;
 
 class AuditedRouteCollection implements Iterator
 {
+    /** @var int $currentIndex */
     private int $currentIndex = 0;
 
     /**
@@ -60,6 +62,7 @@ class AuditedRouteCollection implements Iterator
             if ($current->getScore() === $previous->getScore()) {
                 return strval($current) < strval($previous) ? -1 : 1;
             }
+
             $direction = $ascending ? -1 : 1;
 
             return $current->getScore() < $previous->getScore() ? $direction : ($direction * -1);
@@ -75,7 +78,7 @@ class AuditedRouteCollection implements Iterator
      */
     public function push(AuditedRoute $auditedRoute): self
     {
-        $this->items[] = $auditedRoute;
+        array_push($this->items, $auditedRoute);
 
         return $this;
     }
@@ -86,9 +89,7 @@ class AuditedRouteCollection implements Iterator
      */
     public function each(Closure $callback): self
     {
-        foreach ($this->items as $item) {
-            $callback($item);
-        }
+        array_walk($this->items, $callback);
 
         return $this;
     }
@@ -99,41 +100,49 @@ class AuditedRouteCollection implements Iterator
      */
     public function map(Closure $callback): array
     {
-        $result = [];
-
-        foreach ($this->items as $item) {
-            $result[] = $callback($item);
-        }
-
-        return $result;
+        return array_map($callback, $this->items);
     }
 
     /**
      * @param string $field
      * @param string $value
+     * @throws UnexpectedValueException
      * @return self
      */
     public function where(string $field, string $value): self
     {
-        $self = new self();
-
         /** @var array<Closure(AuditedRoute): bool> $comparators */
         $comparators = [
             'status' => fn (AuditedRoute $auditedRoute): bool => $auditedRoute->getStatus()->value === $value,
-            'name'   => fn (AuditedRoute $auditedRoute): bool => str_contains($value, $auditedRoute->getName()),
+            'name'   => fn (AuditedRoute $auditedRoute): bool => str_contains($value, $auditedRoute->getDisplayName()),
         ];
 
         if (!isset($comparators[$field])) {
             throw new UnexpectedValueException('Unsupported field name: ' . $field);
         }
 
-        foreach ($this->items as $item) {
-            if ($comparators[$field]($item)) {
-                $self->push($item);
+        $self = new self();
+
+        $this->each(function (AuditedRoute $auditedRoute) use ($comparators, $self, $field): void {
+            if ($comparators[$field]($auditedRoute)) {
+                $self->push($auditedRoute);
             }
-        }
+        });
 
         return $self;
+    }
+
+    /**
+     * @param AggregatorInterface ...$aggregators
+     * @return array<AggregatorInterface>
+     */
+    public function aggregate(AggregatorInterface ...$aggregators): array
+    {
+        foreach ($aggregators as $aggregator) {
+            $this->each(fn (AuditedRoute $auditedRoute) => $aggregator->visit($auditedRoute));
+        }
+
+        return $aggregators;
     }
 
     /** @return AuditedRoute */

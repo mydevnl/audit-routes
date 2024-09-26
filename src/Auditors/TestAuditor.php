@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Auditors;
 
 use Illuminate\Support\Facades\Config;
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Traits\Auditable;
 use MyDev\AuditRoutes\Traits\TracksRouteOccurrences;
 use MyDev\AuditRoutes\Traits\TracksVariabeles;
@@ -22,7 +22,10 @@ class TestAuditor implements AuditorInterface
     use TracksVariabeles;
     use TracksRouteOccurrences;
 
+    /** @var Parser $parser */
     private Parser $parser;
+
+    /** @var NodeTraverser $traverser */
     private NodeTraverser $traverser;
 
     /** @return void */
@@ -45,7 +48,7 @@ class TestAuditor implements AuditorInterface
      */
     public function handle(RouteInterface $route): int
     {
-        return $this->getScore($this->getRouteOccurrence($route->getName()));
+        return $this->getScore($this->getRouteOccurrence($route->getIdentifier()));
     }
 
     /** @return void */

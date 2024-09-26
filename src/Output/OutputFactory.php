@@ -8,8 +8,8 @@ use Symfony\Component\Console\Style\OutputStyle;
 
 class OutputFactory
 {
-    /** @var null | class-string<ExportInterface> $exporter */
-    protected ?string $exporter = null;
+    /** @var null | ExportInterface $exporter */
+    protected ?ExportInterface $exporter = null;
 
     /**
      * @param OutputStyle $output
@@ -29,16 +29,19 @@ class OutputFactory
     }
 
     /**
-     * @param null | bool | class-string<ExportInterface> $exporter
+     * @param null | bool | ExportInterface | class-string<ExportInterface> $exporter
+     * @param array<int, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> $aggregators
      * @return self
      */
-    public function withExporter(null | bool | string $exporter): self
+    public function withExporter(null | bool | string | ExportInterface $exporter, array $aggregators = []): self
     {
-        if (is_bool($exporter)) {
-            $exporter = $exporter ? JsonOutput::class : null;
-        }
-
-        $this->exporter = $exporter;
+        $this->exporter = match (true) {
+            empty($exporter)     => null,
+            is_bool($exporter)   => new JsonOutput($this->output),
+            is_string($exporter) => new $exporter($this->output),
+            default              => $exporter,
+        };
+        $this->exporter->setAggregators($aggregators);
 
         return $this;
     }

@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Entities;
 
-use Exception;
 use JsonSerializable;
+use MyDev\AuditRoutes\Auditors\AuditorFactory;
 use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\Enums\AuditStatus;
-use MyDev\AuditRoutes\Repositories\RouteInterface;
+use MyDev\AuditRoutes\Routes\RouteInterface;
 use Stringable;
 
 class AuditedRoute implements Stringable, JsonSerializable
 {
-    private int $score = 0;
-    private array $results = [];
+    /** @var int $score */
+    protected int $score = 0;
+
+    /** @var array<string, mixed> $results */
+    protected array $results = [];
 
     /**
      * @param RouteInterface $route
      * @param int $benchmark
      * @return void
      */
-    public function __construct(private readonly RouteInterface $route, private readonly int $benchmark)
+    public function __construct(protected readonly RouteInterface $route, protected readonly int $benchmark)
     {
     }
 
@@ -37,6 +40,7 @@ class AuditedRoute implements Stringable, JsonSerializable
 
     /**
      * @param array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
+     * @throws \InvalidArgumentException
      * @return self
      */
     public function audit(array $auditors): self
@@ -44,8 +48,12 @@ class AuditedRoute implements Stringable, JsonSerializable
         $this->score = 0;
 
         foreach ($auditors as $key => $value) {
-            $auditor = $this->buildAuditor($key, $value);
+            $auditor = AuditorFactory::build($key, $value);
             $result = $auditor->run($this->route);
+
+            if (is_null($result)) {
+                continue;
+            }
 
             $this->score += $result;
 
@@ -59,15 +67,33 @@ class AuditedRoute implements Stringable, JsonSerializable
     }
 
     /** @return string */
-    public function getName(): string
+    public function getDisplayName(): string
     {
-        return $this->route->getName();
+        $name = $this->route->getName();
+
+        if ($name) {
+            return $name;
+        }
+
+        $uri = $this->route->getUri();
+
+        if (substr($uri, 0, 1) !== '/') {
+            $uri = '/' . $uri;
+        }
+
+        return $uri;
     }
 
     /** @return int */
     public function getScore(): int
     {
         return $this->score;
+    }
+
+    /** @return int */
+    public function getBenchmark(): int
+    {
+        return $this->benchmark;
     }
 
     /** @return AuditStatus */
@@ -92,14 +118,14 @@ class AuditedRoute implements Stringable, JsonSerializable
     /** @return string */
     public function __toString(): string
     {
-        return $this->getName();
+        return $this->getDisplayName();
     }
 
     /** @return array<string, mixed> */
     public function toArray(): array
     {
         return [
-            'name'      => $this->getName(),
+            'name'      => $this->getDisplayName(),
             'score'     => $this->score,
             'status'    => $this->getStatus()->value,
             'failed'    => $this->hasStatus(AuditStatus::Failed),
@@ -112,27 +138,5 @@ class AuditedRoute implements Stringable, JsonSerializable
     public function jsonSerialize(): array
     {
         return $this->toArray();
-    }
-
-    /**
-     * @param class-string<AuditorInterface> | int                    $key
-     * @param class-string<AuditorInterface> | AuditorInterface | int $value
-     * @return AuditorInterface
-     */
-    protected function buildAuditor(string | int $key, string | AuditorInterface | int $value): AuditorInterface
-    {
-        if ($value instanceof AuditorInterface) {
-            return $value;
-        }
-
-        if (is_string($key) && is_int($value)) {
-            return $key::make()->setWeight($value);
-        }
-
-        if (is_int($key) && is_string($value)) {
-            return $value::make()->setWeight($key);
-        }
-
-        throw new Exception('Could not instantiate AuditorInterface');
     }
 }

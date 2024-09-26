@@ -19,7 +19,7 @@ trait AssertsRouteMiddleware
      * @param array<int, string>                                                   $middleware
      * @param array<int, string>                                                   $ignoredRoutes
      * @param null | string | Closure(AuditedRouteCollection): string              $message
-     * @param null | Closure(\MyDev\AuditRoutes\Repositories\RouteInterface): bool $when
+     * @param null | Closure(\MyDev\AuditRoutes\Routes\RouteInterface): bool $when
      * @return self
      */
     protected function assertRoutesHaveMiddleware(

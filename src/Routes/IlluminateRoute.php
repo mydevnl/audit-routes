@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Repositories;
+namespace MyDev\AuditRoutes\Routes;
 
 use Illuminate\Routing\Route;
 
@@ -25,10 +25,22 @@ class IlluminateRoute implements RouteInterface
         return new self($route);
     }
 
-    /** @return string */
-    public function getName(): string
+    /** @return ?string */
+    public function getName(): ?string
     {
-        return (string) $this->route->getName();
+        return $this->route->getName();
+    }
+
+    /** @return string */
+    public function getUri(): string
+    {
+        return $this->route->uri();
+    }
+
+    /** @return string */
+    public function getIdentifier(): string
+    {
+        return $this->getName() ?? $this->getUri();
     }
 
     /** @return array<int, string | callable> */

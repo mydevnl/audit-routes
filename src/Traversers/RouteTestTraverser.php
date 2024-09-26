@@ -21,6 +21,7 @@ use PhpParser\NodeVisitorAbstract;
  */
 class RouteTestTraverser extends NodeVisitorAbstract
 {
+    /** @var string $routeMethod */
     protected string $routeMethod;
 
     /** @var array<int, string> $actingMethods */

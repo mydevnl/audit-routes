@@ -10,7 +10,7 @@ use Symfony\Component\Console\Style\OutputStyle;
 class ConsoleMultiOutput implements OutputInterface
 {
     /**
-     * @param array<int, class-string<OutputInterface>> $outputGenerators
+     * @param array<int, OutputInterface | class-string<OutputInterface>> $outputGenerators
      * @param OutputStyle $output
      * @return void
      */
@@ -25,7 +25,11 @@ class ConsoleMultiOutput implements OutputInterface
     public function generate(AuditedRouteCollection $auditedRoutes): void
     {
         foreach ($this->outputGenerators as $outputGenerator) {
-            (new $outputGenerator($this->output))->generate($auditedRoutes);
+            if (is_string($outputGenerator)) {
+                $outputGenerator = new $outputGenerator($this->output);
+            }
+
+            $outputGenerator->generate($auditedRoutes);
         }
     }
 }
