@@ -4,23 +4,20 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Aggregators;
 
-use MyDev\AuditRoutes\Entities\AuditedRoute;
-
 class SuccessPercentage extends FailedPercentage
 {
     /**
-     * @param AuditedRoute $auditedRoute
+     * @param null | string $name
      * @return void
      */
-    public function visit(AuditedRoute $auditedRoute): void
+    public function __construct(?string $name = null)
     {
-        parent::visit($auditedRoute);
-        $this->result = 100 - $this->result;
+        $this->setName($name);
     }
 
-    /** @return string */
-    public function getName(): string
+    /** @return void */
+    public function after(): void
     {
-        return 'Success percentage';
+        $this->result = 100 - $this->result;
     }
 }

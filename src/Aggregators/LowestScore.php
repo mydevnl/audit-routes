@@ -18,6 +18,15 @@ class LowestScore implements AggregatorInterface
     protected float $result = 0;
 
     /**
+     * @param null | string $name
+     * @return void
+     */
+    public function __construct(?string $name = null)
+    {
+        $this->setName($name);
+    }
+
+    /**
      * @param AuditedRoute $auditedRoute
      * @return void
      */
@@ -30,11 +39,5 @@ class LowestScore implements AggregatorInterface
         }
 
         $this->result = $auditedRoute->getScore();
-    }
-
-    /** @return string */
-    public function getName(): string
-    {
-        return 'Lowest score';
     }
 }

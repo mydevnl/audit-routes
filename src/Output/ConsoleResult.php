@@ -31,7 +31,7 @@ class ConsoleResult implements OutputInterface
         $failedCount = $auditedRoutes->where('status', AuditStatus::Failed->value)->count();
 
         $output = [
-            "{$failedCount} routes scored below the benchmark",
+            "{$failedCount}/{$auditedRoutes->count()} routes scored below the benchmark",
             "Total execution time: {$this->stopTime()} seconds",
         ];
 

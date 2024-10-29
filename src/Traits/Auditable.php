@@ -8,10 +8,12 @@ use MyDev\AuditRoutes\Routes\RouteInterface;
 use ReflectionClass;
 use ReflectionMethod;
 
+/** @mixin \MyDev\Auditors\AuditorInterface */
 trait Auditable
 {
     use ConditionalAuditable;
     use IgnoresRoutes;
+    use Nameable;
 
     /** @var int $routeMethod */
     protected int $weight = 1;
@@ -127,7 +129,7 @@ trait Auditable
     public function toArray(): array
     {
         return [
-            'class'   => get_class($this),
+            'name'    => $this->getName() ?? get_class($this),
             'weight'  => $this->weight,
             'penalty' => $this->penalty,
             'limit'   => $this->limit === PHP_INT_MAX ? null : $this->limit,

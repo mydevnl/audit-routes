@@ -21,6 +21,15 @@ class MedianScore implements AggregatorInterface
     protected ?float $result = null;
 
     /**
+     * @param null | string $name
+     * @return void
+     */
+    public function __construct(?string $name = null)
+    {
+        $this->setName($name);
+    }
+
+    /**
      * @param AuditedRoute $auditedRoute
      * @return void
      */
@@ -34,23 +43,11 @@ class MedianScore implements AggregatorInterface
         $this->visitedCount++;
     }
 
-    /** @return string */
-    public function getName(): string
+    /** @return void */
+    public function after(): void
     {
-        return 'Median score';
-    }
-
-    /** @return float */
-    public function getResult(): float
-    {
-        if (!is_null($this->result)) {
-            return $this->result;
-        }
-
         ksort($this->visitedScores);
         $this->result = $this->getMedian($this->visitedCount / 2);
-
-        return $this->result;
     }
 
     protected function getMedian(float $target, ?int $previousScore = null): float

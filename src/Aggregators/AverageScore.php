@@ -18,6 +18,15 @@ class AverageScore implements AggregatorInterface
     protected float $result = 0;
 
     /**
+     * @param null | string $name
+     * @return void
+     */
+    public function __construct(?string $name = null)
+    {
+        $this->setName($name);
+    }
+
+    /**
      * @param AuditedRoute $auditedRoute
      * @return void
      */
@@ -28,11 +37,5 @@ class AverageScore implements AggregatorInterface
         $this->visitedCount++;
 
         $this->result = $total / $this->visitedCount;
-    }
-
-    /** @return string */
-    public function getName(): string
-    {
-        return 'Average score';
     }
 }

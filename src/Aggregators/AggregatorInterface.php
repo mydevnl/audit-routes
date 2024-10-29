@@ -16,9 +16,21 @@ interface AggregatorInterface extends JsonSerializable, Arrayable
      */
     public function visit(AuditedRoute $auditedRoute): void;
 
-    /** @return string */
-    public function getName(): string;
+    /** @return void */
+    public function after(): void;
 
-    /** @return float */
-    public function getResult(): float;
+    /** @return string */
+    public function getAggregator(): string;
+
+    /** @return null | string */
+    public function getName(): ?string;
+
+    /**
+     * @param null | string $name
+     * @return self
+     */
+    public function setName(?string $name): self;
+
+    /** @return float | array<int, AggregatorInterface> */
+    public function getResult(): float | array;
 }

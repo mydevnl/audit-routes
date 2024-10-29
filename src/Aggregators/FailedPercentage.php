@@ -19,6 +19,15 @@ class FailedPercentage implements AggregatorInterface
     protected float $result = 0;
 
     /**
+     * @param null | string $name
+     * @return void
+     */
+    public function __construct(?string $name = null)
+    {
+        $this->setName($name);
+    }
+
+    /**
      * @param AuditedRoute $auditedRoute
      * @return void
      */
@@ -29,12 +38,7 @@ class FailedPercentage implements AggregatorInterface
         $this->visitedCount++;
 
         $addition = $auditedRoute->hasStatus(AuditStatus::Failed) ? 1 : 0;
-        $this->result = ($failedTotal + $addition) / $this->visitedCount * 100;
-    }
 
-    /** @return string */
-    public function getName(): string
-    {
-        return 'Failed percentage';
+        $this->result = ($failedTotal + $addition) / $this->visitedCount * 100;
     }
 }

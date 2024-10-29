@@ -15,12 +15,13 @@ class TotalBetweenScores implements AggregatorInterface
     protected float $result = 0;
 
     /**
+     * @param null | string $name
      * @param int $from
      * @param int $till
      * @return void
      */
-    public function __construct(protected int $from, protected int $till)
-    {
+    public function __construct(?string $name, protected int $from, protected int $till) {
+        $this->setName($name);
     }
 
     /**
@@ -38,11 +39,5 @@ class TotalBetweenScores implements AggregatorInterface
         }
 
         $this->result++;
-    }
-
-    /** @return string */
-    public function getName(): string
-    {
-        return "Total between {$this->from} and {$this->till}";
     }
 }

@@ -15,12 +15,13 @@ class TotalAroundBenchmark implements AggregatorInterface
     protected float $result = 0;
 
     /**
-     * @param float $percentageBelow
-     * @param float $percentageAbove
+     * @param ?string $name
+     * @param ?float $fractionBelow
+     * @param ?float $fractionAbove
      * @return void
      */
-    public function __construct(protected float $percentageBelow, protected float $percentageAbove)
-    {
+    public function __construct(?string $name, protected ?float $fractionAbove, protected ?float $fractionBelow) {
+        $this->setName($name);
     }
 
     /**
@@ -29,24 +30,24 @@ class TotalAroundBenchmark implements AggregatorInterface
      */
     public function visit(AuditedRoute $auditedRoute): void
     {
-        $from = $auditedRoute->getBenchmark() * (1 - ($this->percentageBelow / 100));
-
-        if ($auditedRoute->getScore() < $from) {
+        if ($this->fractionAbove && $auditedRoute->getScore() < $auditedRoute->getBenchmark() * $this->fractionAbove) {
             return;
         }
 
-        $till = $auditedRoute->getBenchmark() * (1 + ($this->percentageAbove / 100));
 
-        if ($auditedRoute->getScore() > $till) {
+        if ($this->fractionBelow && $auditedRoute->getScore() > $auditedRoute->getBenchmark() * $this->fractionBelow) {
             return;
         }
 
         $this->result++;
     }
 
-    /** @return string */
-    public function getName(): string
+    /**
+     * @param float $fraction
+     * @return string
+     */
+    protected function fractionToPercentage(float $fraction): string
     {
-        return "Total between -{$this->percentageBelow}% and +{$this->percentageAbove}% from benchmark";
+        return round($fraction * 100, 2) . '%';
     }
 }

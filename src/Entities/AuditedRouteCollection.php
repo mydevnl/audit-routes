@@ -140,6 +140,7 @@ class AuditedRouteCollection implements Iterator
     {
         foreach ($aggregators as $aggregator) {
             $this->each(fn (AuditedRoute $auditedRoute) => $aggregator->visit($auditedRoute));
+            $aggregator->after();
         }
 
         return $aggregators;

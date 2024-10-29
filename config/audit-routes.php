@@ -30,6 +30,7 @@ return [
         ],
     ],
     'output' => [
-        'directory' => 'output',
+        'directory'     => 'audit-routes',
+        'html-template' => 'audit-routes::output.report',
     ],
 ];

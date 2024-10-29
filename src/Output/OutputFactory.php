@@ -15,9 +15,7 @@ class OutputFactory
      * @param OutputStyle $output
      * @return void
      */
-    public function __construct(protected OutputStyle $output)
-    {
-    }
+    public function __construct(protected OutputStyle $output) {}
 
     /**
      * @param OutputStyle $output
@@ -26,24 +24,6 @@ class OutputFactory
     public static function channel(OutputStyle $output): self
     {
         return new self($output);
-    }
-
-    /**
-     * @param null | bool | ExportInterface | class-string<ExportInterface> $exporter
-     * @param array<int, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> $aggregators
-     * @return self
-     */
-    public function withExporter(null | bool | string | ExportInterface $exporter, array $aggregators = []): self
-    {
-        $this->exporter = match (true) {
-            empty($exporter)     => null,
-            is_bool($exporter)   => new JsonOutput($this->output),
-            is_string($exporter) => new $exporter($this->output),
-            default              => $exporter,
-        };
-        $this->exporter->setAggregators($aggregators);
-
-        return $this;
     }
 
     /** @return OutputInterface */
@@ -62,5 +42,16 @@ class OutputFactory
         }
 
         return new ConsoleMultiOutput($channels, $this->output);
+    }
+
+    /**
+     * @param ?ExportInterface $exporter
+     * @return self
+     */
+    public function setExporter(?ExportInterface $exporter): self
+    {
+        $this->exporter = $exporter;
+
+        return $this;
     }
 }
