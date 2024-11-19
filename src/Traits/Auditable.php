@@ -41,7 +41,7 @@ trait Auditable
 
     /**
      * @param RouteInterface $route
-     * @return ?int
+     * @return null | int
      */
     public function run(RouteInterface $route): ?int
     {

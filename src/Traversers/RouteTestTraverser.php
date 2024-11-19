@@ -17,7 +17,7 @@ use PhpParser\NodeVisitorAbstract;
 
 /**
  * Discover if a testing method contains an acting method receiving a route as first argument.
- * The stringable value of either an argument or declared variabele will be marked as a tested route.
+ * The stringable value of either an argument or declared variable will be marked as a tested route.
  */
 class RouteTestTraverser extends NodeVisitorAbstract
 {
@@ -35,12 +35,12 @@ class RouteTestTraverser extends NodeVisitorAbstract
 
     /**
      * @param Node $node
-     * @return ?int
+     * @return null | int
      */
     public function enterNode(Node $node): ?int
     {
         match ($node::class) {
-            Assign::class      => $this->handleVariabeleDeclaration($node),
+            Assign::class      => $this->handleVariableDeclaration($node),
             MethodCall::class  => $this->handleMethodCall($node),
             ClassMethod::class => $this->auditor->resetDeclaredVariables(),
             default            => null,
@@ -53,17 +53,17 @@ class RouteTestTraverser extends NodeVisitorAbstract
      * @param Assign $node
      * @return int | null
      */
-    protected function handleVariabeleDeclaration(Assign $node): ?int
+    protected function handleVariableDeclaration(Assign $node): ?int
     {
         if (!$node->var instanceof Variable) {
             return null;
         }
 
-        $variabeleName = strval($node->var->name);
+        $variableName = strval($node->var->name);
 
         (new NodeTraverser(
-            new StringValueTraverser(function (string $value) use ($variabeleName): int {
-                $this->auditor->declareVariable($variabeleName, $value);
+            new StringValueTraverser(function (string $value) use ($variableName): int {
+                $this->auditor->declareVariable($variableName, $value);
 
                 return NodeVisitor::STOP_TRAVERSAL;
             })
@@ -96,8 +96,8 @@ class RouteTestTraverser extends NodeVisitorAbstract
 
                 return NodeVisitor::STOP_TRAVERSAL;
             }),
-            new VariabeleValueTraverser(function (string $variabeleName): ?int {
-                $value = $this->auditor->getDeclaredVariable($variabeleName);
+            new VariableValueTraverser(function (string $variableName): ?int {
+                $value = $this->auditor->getDeclaredVariable($variableName);
 
                 if (!$value) {
                     return null;

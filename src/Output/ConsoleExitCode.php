@@ -6,9 +6,10 @@ namespace MyDev\AuditRoutes\Output;
 
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
+use MyDev\AuditRoutes\Enums\ExitCode;
 use Symfony\Component\Console\Style\OutputStyle;
 
-class ConsoleStatus implements OutputInterface
+class ConsoleExitCode implements OutputInterface
 {
     /**
      * @param OutputStyle $output
@@ -20,16 +21,14 @@ class ConsoleStatus implements OutputInterface
 
     /**
      * @param AuditedRouteCollection $auditedRoutes
-     * @return void
+     * @return ExitCode
      */
-    public function generate(AuditedRouteCollection $auditedRoutes): void
+    public function generate(AuditedRouteCollection $auditedRoutes): ExitCode
     {
         if ($auditedRoutes->where('status', AuditStatus::Failed->value)->isNotEmpty()) {
-            $this->output->text('1');
-
-            return;
+            return ExitCode::Failure;
         }
 
-        $this->output->text('0');
+        return ExitCode::Success;
     }
 }

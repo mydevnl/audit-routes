@@ -29,12 +29,17 @@ class OutputFactory
     /** @return OutputInterface */
     public function build(): OutputInterface
     {
-        $channels = match ($this->output->getVerbosity()) {
-            32      => [ConsoleStatus::class],
-            64      => [ConsoleResult::class],
-            128     => [ConsoleTable::class],
-            256     => [ConsoleTable::class, ConsoleResult::class],
-            default => [ConsoleStatus::class],
+        $verbosity = $this->output->getVerbosity();
+
+        if ($this->output->isQuiet()) {
+            $verbosity = null;
+        }
+
+        $channels = match ($verbosity) {
+            32       => [ConsoleResult::class],
+            64       => [ConsoleTable::class],
+            128, 256 => [ConsoleTable::class, ConsoleResult::class],
+            default  => [ConsoleExitCode::class],
         };
 
         if ($this->exporter) {

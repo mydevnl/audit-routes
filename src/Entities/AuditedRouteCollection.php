@@ -31,7 +31,7 @@ class AuditedRouteCollection implements Iterator
         return new self($items);
     }
 
-    /** @return array */
+    /** @return array<int, AuditedRoute> */
     public function get(): array
     {
         return $this->items;
@@ -134,7 +134,7 @@ class AuditedRouteCollection implements Iterator
 
     /**
      * @param AggregatorInterface ...$aggregators
-     * @return array<AggregatorInterface>
+     * @return array<int, AggregatorInterface>
      */
     public function aggregate(AggregatorInterface ...$aggregators): array
     {

@@ -7,6 +7,8 @@ namespace MyDev\AuditRoutes\Output;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
+use MyDev\AuditRoutes\Entities\ExportResult;
+use MyDev\AuditRoutes\Enums\ExitCode;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class JsonExport implements ExportInterface
@@ -30,9 +32,9 @@ class JsonExport implements ExportInterface
 
     /**
      * @param AuditedRouteCollection $auditedRoutes
-     * @return void
+     * @return ExitCode
      */
-    public function generate(AuditedRouteCollection $auditedRoutes): void
+    public function generate(AuditedRouteCollection $auditedRoutes): ExitCode
     {
         $path = strval(Config::get('audit-routes.output.directory'));
         $fullPath = $path . DIRECTORY_SEPARATOR . $this->filename;
@@ -44,6 +46,8 @@ class JsonExport implements ExportInterface
         Storage::put($fullPath, $this->getOutput($auditedRoutes));
 
         $this->output->section('Report exported to: ' . Storage::path($fullPath));
+
+        return ExitCode::Success;
     }
 
     /**
@@ -74,10 +78,10 @@ class JsonExport implements ExportInterface
      */
     protected function getOutput(AuditedRouteCollection $auditedRoutes): string
     {
-        $result = [
-            'aggregates' => $auditedRoutes->aggregate(...$this->aggregators),
-            'routes'     => $auditedRoutes->sort()->get(),
-        ];
+        $result = new ExportResult(
+            aggregates: $auditedRoutes->aggregate(...$this->aggregators),
+            routes: $auditedRoutes->sort()->get(),
+        );
 
         return json_encode($result, JSON_PRETTY_PRINT);
     }

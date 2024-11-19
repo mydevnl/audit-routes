@@ -6,6 +6,7 @@ namespace MyDev\AuditRoutes\Output;
 
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
+use MyDev\AuditRoutes\Enums\ExitCode;
 use MyDev\AuditRoutes\Traits\TracksTime;
 use Symfony\Component\Console\Style\OutputStyle;
 
@@ -24,9 +25,9 @@ class ConsoleResult implements OutputInterface
 
     /**
      * @param AuditedRouteCollection $auditedRoutes
-     * @return void
+     * @return ExitCode
      */
-    public function generate(AuditedRouteCollection $auditedRoutes): void
+    public function generate(AuditedRouteCollection $auditedRoutes): ExitCode
     {
         $failedCount = $auditedRoutes->where('status', AuditStatus::Failed->value)->count();
 
@@ -38,9 +39,11 @@ class ConsoleResult implements OutputInterface
         if ($failedCount) {
             $this->output->error($output);
 
-            return;
+            return ExitCode::Failure;
         }
 
         $this->output->success($output);
+
+        return ExitCode::Success;
     }
 }

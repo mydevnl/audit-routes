@@ -36,17 +36,33 @@ class RouteFactory
      */
     public static function build(mixed $route, null | string | int $name = null): RouteInterface
     {
-        if (is_string($route)) {
-            $route = self::resolveStringableRoute($route);
-        }
-
         return match(true) {
-            is_string($route)                        => new StringableRoute($route),
+            is_string($route)                        => self::buildStringableRoute($route),
             $route instanceof IlluminateRoutingRoute => new IlluminateRoute($route),
             $route instanceof SymfonyRoutingRoute    => new SymfonyRoute($name, $route),
             $route instanceof RouteInterface         => $route,
             default                                  => throw new InvalidArgumentException('Unsupported route'),
         };
+    }
+
+    /**
+     * @param string $route
+     * @return RouteInterface
+     */
+    protected static function buildStringableRoute(string $route): RouteInterface
+    {
+        try {
+            $router = App::make(Router::class);
+            $resolvedRoute = $router->getRoutes()->getByName($route);
+
+            if ($resolvedRoute) {
+                return new IlluminateRoute($resolvedRoute);
+            }
+        } catch (Exception $error) {
+            unset($error);
+        }
+
+        return new StringableRoute($route);
     }
 
     /**
@@ -62,25 +78,5 @@ class RouteFactory
         }
 
         return $routes;
-    }
-
-    /**
-     * @param string $route
-     * @return IlluminateRoutingRoute | string
-     */
-    protected static function resolveStringableRoute(string $route): IlluminateRoutingRoute | string
-    {
-        try {
-            $router = App::make(Router::class);
-            $resolvedRoute = $router->getRoutes()->getByName($route);
-
-            if ($resolvedRoute) {
-                $route = $resolvedRoute;
-            }
-        } catch (Exception $error) {
-            unset($error);
-        }
-
-        return $route;
     }
 }

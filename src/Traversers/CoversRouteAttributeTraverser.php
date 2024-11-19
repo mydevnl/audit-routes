@@ -28,7 +28,7 @@ class CoversRouteAttributeTraverser extends NodeVisitorAbstract
 
     /**
      * @param Node $node
-     * @return ?int
+     * @return null | int
      */
     public function enterNode(Node $node): ?int
     {

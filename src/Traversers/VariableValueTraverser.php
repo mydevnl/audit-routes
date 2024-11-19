@@ -9,7 +9,7 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\NodeVisitorAbstract;
 
-class VariabeleValueTraverser extends NodeVisitorAbstract
+class VariableValueTraverser extends NodeVisitorAbstract
 {
     /**
      * @param Closure(string): ?int $callback
@@ -21,7 +21,7 @@ class VariabeleValueTraverser extends NodeVisitorAbstract
 
     /**
      * @param Node $node
-     * @return ?int
+     * @return null | int
      */
     public function enterNode(Node $node): ?int
     {

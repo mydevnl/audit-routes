@@ -6,7 +6,7 @@ namespace MyDev\AuditRoutes\Routes;
 
 interface RouteInterface
 {
-    /** @return ?string */
+    /** @return null | string */
     public function getName(): ?string;
 
     /** @return string */

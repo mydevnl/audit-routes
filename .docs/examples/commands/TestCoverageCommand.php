@@ -7,7 +7,7 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
 use MyDev\AuditRoutes\Aggregators\AverageScore;
-use MyDev\AuditRoutes\Aggregators\ConditionedTotal;
+use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
 use MyDev\AuditRoutes\Auditors\TestAuditor;
@@ -18,8 +18,8 @@ use MyDev\AuditRoutes\Output\OutputFactory;
 
 class TestCoverageCommand extends Command
 {
-    protected $signature = 'route:audit-test-coverage {--export=} {--filename=}';
-    protected $description = 'Run security auditing for Laravel routes';
+    protected $signature = 'route:audit-test-coverage {--benchmark=1} {--export=} {--filename=}';
+    protected $description = 'Run Test Coverage auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -30,26 +30,26 @@ class TestCoverageCommand extends Command
         parent::__construct();
     }
 
-    /** @return void */
-    public function handle(): void
+    /** @return int */
+    public function handle(): int
     {
         $output = OutputFactory::channel($this->output)->setExporter($this->getExporter())->build();
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
-            ->setBenchmark(1)
+            ->setBenchmark((int) $this->option('benchmark'))
             ->run([TestAuditor::make()]);
 
-        $output->generate($result);
+        return $output->generate($result)->value;
     }
 
-    /** @return ?ExportInterface */
+    /** @return null | ExportInterface */
     protected function getExporter(): ?ExportInterface
     {
         return ExportFactory::channel($this->output)->build(
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
-            new ConditionedTotal('Total routes'),
+            new ConditionedCumulative('Total routes'),
             new FailedPercentage('Uncovered rate'),
             new SuccessPercentage('Covered rate'),
             new AverageScore('Average coverage'),

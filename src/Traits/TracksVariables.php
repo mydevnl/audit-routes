@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
-trait TracksVariabeles
+trait TracksVariables
 {
     /** @var array<string, mixed> $declaredVariables */
     protected array $declaredVariables = [];

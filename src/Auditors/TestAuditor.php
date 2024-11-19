@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Traits\Auditable;
 use MyDev\AuditRoutes\Traits\TracksRouteOccurrences;
-use MyDev\AuditRoutes\Traits\TracksVariabeles;
+use MyDev\AuditRoutes\Traits\TracksVariables;
 use MyDev\AuditRoutes\Traversers\CoversRouteAttributeTraverser;
 use MyDev\AuditRoutes\Traversers\RouteTestTraverser;
 use MyDev\AuditRoutes\Utilities\ClassDiscovery;
@@ -18,7 +18,7 @@ use PhpParser\ParserFactory;
 class TestAuditor implements AuditorInterface
 {
     use Auditable;
-    use TracksVariabeles;
+    use TracksVariables;
     use TracksRouteOccurrences;
 
     /** @return void */

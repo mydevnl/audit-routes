@@ -26,12 +26,6 @@ You can install the package via Composer:
 composer require mydevnl/audit-routes:dev-main --dev
 ```
 
-After installation, simply run the `route:audit` command:
-
-```bash
-php artisan route:audit -vvv
-```
-
 Optionally publish the configuration file:
 
 ```bash
@@ -40,7 +34,7 @@ php artisan vendor:publish --tag=audit-routes-config
 
 ## Usage
 
-Once installed, setting up custom commands is a breeze. The package provides flexible options that allow you to tailor your route audits to fit your application's specific needs. To help you get started, a default command has been included to demonstrate how to leverage these options effectively:
+Once installed, setting up custom commands is a breeze. The package provides flexible options that allow you to tailor your route audits to fit your application's specific needs.
 
 ```php
 AuditRoutes::for($this->router->getRoutes()->getRoutes())
@@ -48,17 +42,51 @@ AuditRoutes::for($this->router->getRoutes()->getRoutes())
     ->run([
         PolicyAuditor::class => 100,
         PermissionAuditor::class => -100,
-        TestAuditor::make()->setWeight(250)->setPenalty(-10000)->setLimit(2333),
+        TestAuditor::make()
+            ->setLimit(2333)
+            ->setPenalty(-10000)
+            ->setWeight(250),
         MiddlewareAuditor::make(['auth'])
             ->ignoreRoutes(['login', 'password*', 'api.*'])
             ->setPenalty(-1000)
             ->setWeight(10),
-        MiddlewareAuditor::make(['auth:sanctum'])
-            ->when(fn (RouteInterface $route): bool => str_starts_with($route->getIdentifier(), 'api'))
-            ->ignoreRoutes(['api.password', 'api.login', 'api.register'])
-            ->setPenalty(-1000)
-            ->setWeight(10),
     ]);
+```
+
+## Default commands
+
+To help you get started, default commands have been included to demonstrate how to leverage these options effectively.
+
+Check out the `.docs/examples` directory.
+
+### Advanced Reporting
+
+An opinionated setup leveraging multiple auditors for comprehensive analysis.
+
+Supports verbose output, HTML and JSON exports, and customizable benchmarks.
+
+```bash
+php artisan route:audit -vv --benchmark 500 --export html --filename report.html
+```
+
+### Test Coverage
+
+Verify that each route is covered by tests and gain insights into the average number of tests per route.
+
+Supports verbose output, HTML and JSON exports, and customizable benchmarks.
+
+```bash
+php artisan route:audit-test-coverage -vv --benchmark 1 --export html --filename test.html
+```
+
+### Authentication Middleware
+
+Quickly identify which routes require authentication and which do not.
+
+Supports verbose output, HTML and JSON exports.
+
+```bash
+php artisan route:audit-auth -vv --export html --filename auth.html
 ```
 
 ## Testing
@@ -107,4 +135,4 @@ This package is open-sourced software licensed under the [MIT license](LICENSE.m
 Please be aware that the latest release is experimental and may be unstable.
 The roadmap will be published soon. Follow [mydevnl](https://github.com/mydevnl) to stay updated!
 
-May your code be flawless! 🎉
+May your routes be flawless! 🎉

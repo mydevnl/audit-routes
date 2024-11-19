@@ -25,7 +25,7 @@ class IlluminateRoute implements RouteInterface
         return new self($route);
     }
 
-    /** @return ?string */
+    /** @return null | string */
     public function getName(): ?string
     {
         return $this->route->getName();

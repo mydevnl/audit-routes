@@ -6,7 +6,7 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
-use MyDev\AuditRoutes\Aggregators\ConditionedTotal;
+use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
 use MyDev\AuditRoutes\Auditors\MiddlewareAuditor;
@@ -19,7 +19,7 @@ use MyDev\AuditRoutes\Routes\RouteInterface;
 class AuthenticatedCommand extends Command
 {
     protected $signature = 'route:audit-auth {--export=} {--filename=}';
-    protected $description = 'Run security auditing for Laravel routes';
+    protected $description = 'Run Authentication Middleware auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -30,8 +30,8 @@ class AuthenticatedCommand extends Command
         parent::__construct();
     }
 
-    /** @return void */
-    public function handle(): void
+    /** @return int */
+    public function handle(): int
     {
         $output = OutputFactory::channel($this->output)->setExporter($this->getExporter())->build();
 
@@ -46,17 +46,17 @@ class AuthenticatedCommand extends Command
                     ->setName('MiddlewareAuditor auth:sanctum'),
             ]);
 
-        $output->generate($result);
+        return $output->generate($result)->value;
     }
 
-    /** @return ?ExportInterface */
+    /** @return null | ExportInterface */
     protected function getExporter(): ?ExportInterface
     {
         return ExportFactory::channel($this->output)->build(
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
-            new ConditionedTotal('Total routes'),
+            new ConditionedCumulative('Total routes'),
             new FailedPercentage('Guest rate'),
             new SuccessPercentage('Authenticated rate'),
         ]);

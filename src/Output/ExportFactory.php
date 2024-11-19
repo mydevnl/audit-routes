@@ -27,7 +27,7 @@ class ExportFactory
     /**
      * @param null | bool | string | ExportInterface $exporter
      * @param null | string $filename
-     * @return ?ExportInterface
+     * @return null | ExportInterface
      */
     public function build(null | bool | string | ExportInterface $exporter, ?string $filename = null): ?ExportInterface
     {

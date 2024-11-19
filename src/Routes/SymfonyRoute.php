@@ -27,7 +27,7 @@ class SymfonyRoute implements RouteInterface
         return new self($name, $route);
     }
 
-    /** @return ?string */
+    /** @return null | string */
     public function getName(): ?string
     {
         return $this->name;

@@ -8,7 +8,7 @@ use Closure;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Traits\Aggregateable;
 
-class ConditionedTotal implements AggregatorInterface
+class ConditionedCumulative implements AggregatorInterface
 {
     use Aggregateable;
 

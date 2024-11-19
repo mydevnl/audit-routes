@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Output;
 
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
+use MyDev\AuditRoutes\Enums\ExitCode;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class ConsoleMultiOutput implements OutputInterface
@@ -20,16 +21,24 @@ class ConsoleMultiOutput implements OutputInterface
 
     /**
      * @param AuditedRouteCollection $auditedRoutes
-     * @return void
+     * @return ExitCode
      */
-    public function generate(AuditedRouteCollection $auditedRoutes): void
+    public function generate(AuditedRouteCollection $auditedRoutes): ExitCode
     {
+        $exitCode = ExitCode::Success;
+
         foreach ($this->outputGenerators as $outputGenerator) {
             if (is_string($outputGenerator)) {
                 $outputGenerator = new $outputGenerator($this->output);
             }
 
-            $outputGenerator->generate($auditedRoutes);
+            $currentExitCode = $outputGenerator->generate($auditedRoutes);
+
+            if ($currentExitCode !== ExitCode::Success) {
+                $exitCode = $currentExitCode;
+            }
         }
+
+        return $exitCode;
     }
 }

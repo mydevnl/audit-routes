@@ -7,6 +7,7 @@ namespace MyDev\AuditRoutes\Output;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
+use MyDev\AuditRoutes\Enums\ExitCode;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class ConsoleTable implements OutputInterface
@@ -21,9 +22,9 @@ class ConsoleTable implements OutputInterface
 
     /**
      * @param AuditedRouteCollection $auditedRoutes
-     * @return void
+     * @return ExitCode
      */
-    public function generate(AuditedRouteCollection $auditedRoutes): void
+    public function generate(AuditedRouteCollection $auditedRoutes): ExitCode
     {
         $this->output->table([
             'Status',
@@ -34,5 +35,7 @@ class ConsoleTable implements OutputInterface
             $auditedRoute->getDisplayName(),
             $auditedRoute->getScore(),
         ], $auditedRoutes->sort()->get()));
+
+        return ExitCode::Success;
     }
 }

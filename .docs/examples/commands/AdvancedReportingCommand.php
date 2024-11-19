@@ -7,6 +7,7 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
 use MyDev\AuditRoutes\Aggregators\AverageScore;
+use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\Group;
 use MyDev\AuditRoutes\Aggregators\HighestScore;
@@ -28,8 +29,8 @@ use MyDev\AuditRoutes\Routes\RouteInterface;
 
 class AdvancedReportingCommand extends Command
 {
-    protected $signature = 'route:audit {--export=} {--filename=}';
-    protected $description = 'Run security auditing for Laravel routes';
+    protected $signature = 'route:audit {--benchmark=1000} {--export=} {--filename=}';
+    protected $description = 'Run Advanced Reporting auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -40,13 +41,13 @@ class AdvancedReportingCommand extends Command
         parent::__construct();
     }
 
-    /** @return void */
-    public function handle(): void
+    /** @return int */
+    public function handle(): int
     {
         $output = OutputFactory::channel($this->output)->setExporter($this->getExporter())->build();
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
-            ->setBenchmark(1000)
+            ->setBenchmark((int) $this->option('benchmark'))
             ->run([
                 PolicyAuditor::class => 100,
                 PermissionAuditor::class => -100,
@@ -64,23 +65,24 @@ class AdvancedReportingCommand extends Command
                     ->setName('MiddlewareAuditor auth:sanctum'),
             ]);
 
-        $output->generate($result);
+        return $output->generate($result)->value;
     }
 
-    /** @return ?ExportInterface */
+    /** @return null | ExportInterface */
     protected function getExporter(): ?ExportInterface
     {
         return ExportFactory::channel($this->output)->build(
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
+            new ConditionedCumulative('Total routes'),
+            new FailedPercentage('Failed rate'),
+            new SuccessPercentage('Success rate'),
             new LowestScore('Lowest'),
             new HighestScore('Highest'),
             new AverageScore('Average'),
             new MedianScore('Median'),
             new ModeScore('Mode'),
-            new FailedPercentage('Failed rate'),
-            new SuccessPercentage('Success rate'),
             new Group(
                 'Total scores',
                 new TotalBetweenScores('Between -15,000 and -5,000', -15_000, -5_000),
