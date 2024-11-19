@@ -8,22 +8,19 @@ use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Auditors\TestAuditor;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Assign;
-use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 
 /**
- * Discover if a testing method calls the route helper within an acting method.
- * The first argument provided to the route helper is marked as a tested route.
+ * Discover if a testing method contains an acting method receiving a route as first argument.
+ * The stringable value of either an argument or declared variabele will be marked as a tested route.
  */
 class RouteTestTraverser extends NodeVisitorAbstract
 {
-    /** @var string $routeMethod */
-    protected string $routeMethod;
-
     /** @var array<int, string> $actingMethods */
     protected array $actingMethods;
 
@@ -31,9 +28,8 @@ class RouteTestTraverser extends NodeVisitorAbstract
      * @param TestAuditor $auditor
      * @return void
      */
-    public function __construct(private readonly TestAuditor $auditor)
+    public function __construct(protected readonly TestAuditor $auditor)
     {
-        $this->routeMethod = Config::get('audit-routes.tests.route-method');
         $this->actingMethods = Config::get('audit-routes.tests.acting-methods');
     }
 
@@ -45,8 +41,8 @@ class RouteTestTraverser extends NodeVisitorAbstract
     {
         match ($node::class) {
             Assign::class      => $this->handleVariabeleDeclaration($node),
-            ClassMethod::class => $this->auditor->resetDeclaredVariables(),
             MethodCall::class  => $this->handleMethodCall($node),
+            ClassMethod::class => $this->auditor->resetDeclaredVariables(),
             default            => null,
         };
 
@@ -55,45 +51,64 @@ class RouteTestTraverser extends NodeVisitorAbstract
 
     /**
      * @param Assign $node
-     * @return void
+     * @return int | null
      */
-    protected function handleVariabeleDeclaration(Assign $node): void
+    protected function handleVariabeleDeclaration(Assign $node): ?int
     {
-        if (!$node->var instanceof Variable || !$node->expr instanceof String_) {
-            return;
+        if (!$node->var instanceof Variable) {
+            return null;
         }
 
-        $this->auditor->declareVariable(strval($node->var->name), $node->expr->value);
+        $variabeleName = strval($node->var->name);
+
+        (new NodeTraverser(
+            new StringValueTraverser(function (string $value) use ($variabeleName): int {
+                $this->auditor->declareVariable($variabeleName, $value);
+
+                return NodeVisitor::STOP_TRAVERSAL;
+            })
+        ))->traverse([$node->expr]);
+
+        return NodeVisitor::DONT_TRAVERSE_CHILDREN;
     }
 
     /**
      * @param MethodCall $node
-     * @return void
+     * @return int | null
      */
-    protected function handleMethodCall(MethodCall $node): void
+    protected function handleMethodCall(MethodCall $node): ?int
     {
+        if (!method_exists($node->name, 'toString')) {
+            return null;
+        }
+
         if (!in_array($node->name->toString(), $this->actingMethods)) {
-            return;
+            return null;
         }
 
-        $funcCall = ($node->args[0] ?? null)?->value;
-
-        if (!$funcCall instanceof FuncCall || $funcCall->name->name !== $this->routeMethod) {
-            return;
+        if (empty($node->args[0])) {
+            return null;
         }
 
-        $argument = ($funcCall->args[0] ?? null)?->value;
+        (new NodeTraverser(
+            new StringValueTraverser(function (string $value): int {
+                $this->auditor->markRouteOccurrence($value);
 
-        $route = match (true) {
-            $argument instanceof String_  => $argument->value,
-            $argument instanceof Variable => $this->auditor->getDeclaredVariable($argument->name),
-            default                       => null,
-        };
+                return NodeVisitor::STOP_TRAVERSAL;
+            }),
+            new VariabeleValueTraverser(function (string $variabeleName): ?int {
+                $value = $this->auditor->getDeclaredVariable($variabeleName);
 
-        if (empty($route)) {
-            return;
-        }
+                if (!$value) {
+                    return null;
+                }
 
-        $this->auditor->markRouteOccurrence($route);
+                $this->auditor->markRouteOccurrence($value);
+
+                return NodeVisitor::STOP_TRAVERSAL;
+            }),
+        ))->traverse([$node->args[0]]);
+
+        return NodeVisitor::DONT_TRAVERSE_CHILDREN;
     }
 }

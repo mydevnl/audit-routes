@@ -13,7 +13,7 @@ final readonly class CoversRoute
      * @param string | array<int, string> $routes
      * @return void
      */
-    public function __construct(private string|array $routes)
+    public function __construct(protected string|array $routes)
     {
     }
 

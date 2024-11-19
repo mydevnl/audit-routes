@@ -13,7 +13,6 @@ use MyDev\AuditRoutes\Traversers\CoversRouteAttributeTraverser;
 use MyDev\AuditRoutes\Traversers\RouteTestTraverser;
 use MyDev\AuditRoutes\Utilities\ClassDiscovery;
 use PhpParser\NodeTraverser;
-use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
 class TestAuditor implements AuditorInterface
@@ -22,23 +21,24 @@ class TestAuditor implements AuditorInterface
     use TracksVariabeles;
     use TracksRouteOccurrences;
 
-    /** @var Parser $parser */
-    private Parser $parser;
-
-    /** @var NodeTraverser $traverser */
-    private NodeTraverser $traverser;
-
     /** @return void */
     public function __construct()
     {
-        $this->setUpParser();
+        $parser = (new ParserFactory())->createForNewestSupportedVersion();
 
-        $testImplementation = Config::get('audit-routes.tests.implementation');
-        $testDirectory = Config::get('audit-routes.tests.directory');
+        $traverser = new NodeTraverser(
+            new RouteTestTraverser($this),
+            new CoversRouteAttributeTraverser($this),
+        );
 
-        foreach (ClassDiscovery::subclassesOf($testImplementation, $testDirectory) as $testClass) {
-            $syntaxTree = $this->parser->parse(ClassDiscovery::source($testClass));
-            $this->traverser->traverse($syntaxTree);
+        $testClasses = ClassDiscovery::subclassesOf(
+            Config::get('audit-routes.tests.implementation'),
+            Config::get('audit-routes.tests.directory'),
+        );
+
+        foreach ($testClasses as $testClass) {
+            $syntaxTree = $parser->parse(ClassDiscovery::source($testClass));
+            $traverser->traverse($syntaxTree);
         }
     }
 
@@ -49,16 +49,5 @@ class TestAuditor implements AuditorInterface
     public function handle(RouteInterface $route): int
     {
         return $this->getScore($this->getRouteOccurrence($route->getIdentifier()));
-    }
-
-    /** @return void */
-    protected function setUpParser(): void
-    {
-        $this->parser = (new ParserFactory())->createForNewestSupportedVersion();
-
-        $this->traverser = new NodeTraverser(
-            new RouteTestTraverser($this),
-            new CoversRouteAttributeTraverser($this),
-        );
     }
 }

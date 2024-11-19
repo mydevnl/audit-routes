@@ -25,7 +25,7 @@ trait Auditable
     protected int $limit = PHP_INT_MAX;
 
     /**
-     * @param ?array<int | string, mixed> $arguments
+     * @param null | array<int | string, mixed> $arguments
      * @return self
      */
     public static function make(?array $arguments = null): self

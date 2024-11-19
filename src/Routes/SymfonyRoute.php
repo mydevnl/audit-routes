@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Route;
 class SymfonyRoute implements RouteInterface
 {
     /**
-     * @param ?string $name
+     * @param null | string $name
      * @param Route $route
      * @return void
      */
@@ -18,7 +18,7 @@ class SymfonyRoute implements RouteInterface
     }
 
     /**
-     * @param ?string $name
+     * @param null | string $name
      * @param Route $route
      * @return self
      */

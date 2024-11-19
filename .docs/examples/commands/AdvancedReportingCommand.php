@@ -35,7 +35,7 @@ class AdvancedReportingCommand extends Command
      * @param Router $router
      * @return void
      */
-    public function __construct(private Router $router)
+    public function __construct(protected Router $router)
     {
         parent::__construct();
     }
@@ -77,7 +77,7 @@ class AdvancedReportingCommand extends Command
             new LowestScore('Lowest'),
             new HighestScore('Highest'),
             new AverageScore('Average'),
-            new MedianScore('Media'),
+            new MedianScore('Median'),
             new ModeScore('Mode'),
             new FailedPercentage('Failed rate'),
             new SuccessPercentage('Success rate'),

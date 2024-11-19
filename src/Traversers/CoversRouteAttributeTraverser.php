@@ -8,7 +8,6 @@ use MyDev\AuditRoutes\Attributes\CoversRoute;
 use MyDev\AuditRoutes\Auditors\TestAuditor;
 use PhpParser\Node;
 use PhpParser\Node\Attribute;
-use PhpParser\Node\Scalar\String_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
@@ -23,7 +22,7 @@ class CoversRouteAttributeTraverser extends NodeVisitorAbstract
      * @param TestAuditor $auditor
      * @return void
      */
-    public function __construct(private readonly TestAuditor $auditor)
+    public function __construct(protected readonly TestAuditor $auditor)
     {
     }
 
@@ -41,30 +40,14 @@ class CoversRouteAttributeTraverser extends NodeVisitorAbstract
             return null;
         }
 
-        $this->traverseAttributeArguments($node);
+        (new NodeTraverser(
+            new StringValueTraverser(function (string $value): int {
+                $this->auditor->markRouteOccurrence($value);
+
+                return NodeVisitor::STOP_TRAVERSAL;
+            })
+        ))->traverse($node->args);
 
         return NodeVisitor::DONT_TRAVERSE_CHILDREN;
-    }
-
-    /**
-     * @param Attribute $node
-     * @return void
-     */
-    protected function traverseAttributeArguments(Attribute $node): void
-    {
-        (new NodeTraverser(new class ($this->auditor) extends NodeVisitorAbstract {
-            public function __construct(private readonly TestAuditor $auditor)
-            {
-            }
-        
-            public function enterNode(Node $node): null | int
-            {
-                if ($node instanceof String_) {
-                    $this->auditor->markRouteOccurrence($node->value);
-                }
-        
-                return null;
-            }
-        }))->traverse($node->args);
     }
 }

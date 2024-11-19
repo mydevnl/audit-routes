@@ -13,7 +13,6 @@ return [
     'tests'     => [
         'directory'      => 'tests',
         'implementation' => \Tests\TestCase::class,
-        'route-method'   => 'route',
         'acting-methods' => [
             'get',
             'getJson',

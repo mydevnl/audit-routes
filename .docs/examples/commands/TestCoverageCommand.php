@@ -7,6 +7,7 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
 use MyDev\AuditRoutes\Aggregators\AverageScore;
+use MyDev\AuditRoutes\Aggregators\ConditionedTotal;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
 use MyDev\AuditRoutes\Auditors\TestAuditor;
@@ -24,7 +25,7 @@ class TestCoverageCommand extends Command
      * @param Router $router
      * @return void
      */
-    public function __construct(private Router $router)
+    public function __construct(protected Router $router)
     {
         parent::__construct();
     }
@@ -48,6 +49,7 @@ class TestCoverageCommand extends Command
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
+            new ConditionedTotal('Total routes'),
             new FailedPercentage('Uncovered rate'),
             new SuccessPercentage('Covered rate'),
             new AverageScore('Average coverage'),

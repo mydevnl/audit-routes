@@ -6,6 +6,7 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
+use MyDev\AuditRoutes\Aggregators\ConditionedTotal;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
 use MyDev\AuditRoutes\Auditors\MiddlewareAuditor;
@@ -24,7 +25,7 @@ class AuthenticatedCommand extends Command
      * @param Router $router
      * @return void
      */
-    public function __construct(private Router $router)
+    public function __construct(protected Router $router)
     {
         parent::__construct();
     }
@@ -55,6 +56,7 @@ class AuthenticatedCommand extends Command
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
+            new ConditionedTotal('Total routes'),
             new FailedPercentage('Guest rate'),
             new SuccessPercentage('Authenticated rate'),
         ]);

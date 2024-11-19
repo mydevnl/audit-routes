@@ -15,9 +15,9 @@ class TotalAroundBenchmark implements AggregatorInterface
     protected float $result = 0;
 
     /**
-     * @param ?string $name
-     * @param ?float $fractionBelow
-     * @param ?float $fractionAbove
+     * @param null | string $name
+     * @param null | float $fractionBelow
+     * @param null | float $fractionAbove
      * @return void
      */
     public function __construct(?string $name, protected ?float $fractionAbove, protected ?float $fractionBelow) {

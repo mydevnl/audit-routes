@@ -12,13 +12,13 @@ use UnexpectedValueException;
 class AuditedRouteCollection implements Iterator
 {
     /** @var int $currentIndex */
-    private int $currentIndex = 0;
+    protected int $currentIndex = 0;
 
     /**
      * @param array<int, AuditedRoute> $items
      * @return void
      */
-    public function __construct(private array $items = [])
+    public function __construct(protected array $items = [])
     {
     }
 

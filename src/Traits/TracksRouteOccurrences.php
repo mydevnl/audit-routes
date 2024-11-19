@@ -7,7 +7,7 @@ namespace MyDev\AuditRoutes\Traits;
 trait TracksRouteOccurrences
 {
     /** @var array<string, int> $routeOccurrences */
-    private array $routeOccurrences = [];
+    protected array $routeOccurrences = [];
 
     /**
      * @param string $route

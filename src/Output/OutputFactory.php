@@ -45,7 +45,7 @@ class OutputFactory
     }
 
     /**
-     * @param ?ExportInterface $exporter
+     * @param null | ExportInterface $exporter
      * @return self
      */
     public function setExporter(?ExportInterface $exporter): self

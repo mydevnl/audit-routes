@@ -10,7 +10,7 @@ use MyDev\AuditRoutes\Routes\RouteInterface;
 interface AuditorInterface extends JsonSerializable
 {
     /**
-     * @param ?array $arguments
+     * @param null | array $arguments
      * @return self
      */
     public static function make(?array $arguments = null): self;

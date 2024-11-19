@@ -7,7 +7,7 @@ namespace MyDev\AuditRoutes\Traits;
 trait TracksVariabeles
 {
     /** @var array<string, mixed> $declaredVariables */
-    private array $declaredVariables = [];
+    protected array $declaredVariables = [];
 
     /**
      * @param string $name
