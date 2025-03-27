@@ -6,9 +6,10 @@ namespace MyDev\AuditRoutes\Output;
 
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\ExitCode;
+use MyDev\AuditRoutes\Output\OutputInterface;
 use Symfony\Component\Console\Style\OutputStyle;
 
-class ConsoleMultiOutput implements OutputInterface
+class OutputCollection implements OutputInterface
 {
     /**
      * @param array<int, OutputInterface | class-string<OutputInterface>> $outputGenerators

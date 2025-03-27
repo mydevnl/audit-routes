@@ -20,4 +20,7 @@ interface RouteInterface
 
     /** @return string */
     public function getClass(): string;
+
+    /** @return null | bool */
+    public function hasScopedBindings(): ?bool;
 }

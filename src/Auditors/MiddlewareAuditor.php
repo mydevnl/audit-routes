@@ -33,12 +33,12 @@ class MiddlewareAuditor implements AuditorInterface
     }
 
     /**
-     * @param array<int | string, mixed> $arguments
+     * @param null | array<int | string, mixed> $arguments
      * @return self
      */
-    public function setArguments(array $arguments): self
+    public function setArguments(?array $arguments): self
     {
-        $this->middlewares = $arguments;
+        $this->middlewares = $arguments ?? [];
 
         return $this;
     }

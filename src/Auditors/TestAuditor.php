@@ -14,6 +14,7 @@ use MyDev\AuditRoutes\Traversers\RouteTestTraverser;
 use MyDev\AuditRoutes\Utilities\ClassDiscovery;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
+use ReflectionException;
 
 class TestAuditor implements AuditorInterface
 {
@@ -21,7 +22,10 @@ class TestAuditor implements AuditorInterface
     use TracksVariables;
     use TracksRouteOccurrences;
 
-    /** @return void */
+    /**
+     * @return void
+     * @throws ReflectionException
+     */
     public function __construct()
     {
         $parser = (new ParserFactory())->createForNewestSupportedVersion();
@@ -32,12 +36,17 @@ class TestAuditor implements AuditorInterface
         );
 
         $testClasses = ClassDiscovery::subclassesOf(
-            Config::get('audit-routes.tests.implementation'),
-            Config::get('audit-routes.tests.directory'),
+            Config::string('audit-routes.tests.implementation'),
+            Config::string('audit-routes.tests.directory'),
         );
 
         foreach ($testClasses as $testClass) {
             $syntaxTree = $parser->parse(ClassDiscovery::source($testClass));
+
+            if (!$syntaxTree) {
+                continue;
+            }
+
             $traverser->traverse($syntaxTree);
         }
     }

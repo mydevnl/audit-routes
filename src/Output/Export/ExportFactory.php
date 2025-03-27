@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Output;
+namespace MyDev\AuditRoutes\Output\Export;
 
 use InvalidArgumentException;
 use Symfony\Component\Console\Style\OutputStyle;

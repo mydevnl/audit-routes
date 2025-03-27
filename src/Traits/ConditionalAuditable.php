@@ -14,9 +14,9 @@ trait ConditionalAuditable
 
     /**
      * @param Closure(RouteInterface): bool $condition
-     * @return self
+     * @return static
      */
-    public function when(Closure $condition): self
+    public function when(Closure $condition): static
     {
         $this->conditions[] = $condition;
 

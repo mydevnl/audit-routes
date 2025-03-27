@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
+use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\Routes\RouteInterface;
 use ReflectionClass;
 use ReflectionMethod;
 
-/** @mixin \MyDev\Auditors\AuditorInterface */
+/** @mixin AuditorInterface */
 trait Auditable
 {
     use ConditionalAuditable;
@@ -67,9 +68,9 @@ trait Auditable
 
     /**
      * @param int $weight
-     * @return self
+     * @return static
      */
-    public function setWeight(int $weight): self
+    public function setWeight(int $weight): static
     {
         $this->weight = $weight;
 
@@ -78,9 +79,9 @@ trait Auditable
 
     /**
      * @param int $penalty
-     * @return self
+     * @return static
      */
-    public function setPenalty(int $penalty): self
+    public function setPenalty(int $penalty): static
     {
         $this->penalty = $penalty;
 
@@ -89,9 +90,9 @@ trait Auditable
 
     /**
      * @param int $limit
-     * @return self
+     * @return static
      */
-    public function setLimit(int $limit): self
+    public function setLimit(int $limit): static
     {
         $this->limit = $limit;
 

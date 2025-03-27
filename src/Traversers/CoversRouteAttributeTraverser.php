@@ -22,7 +22,7 @@ class CoversRouteAttributeTraverser extends NodeVisitorAbstract
      * @param TestAuditor $auditor
      * @return void
      */
-    public function __construct(protected readonly TestAuditor $auditor)
+    public function __construct(protected TestAuditor $auditor)
     {
     }
 

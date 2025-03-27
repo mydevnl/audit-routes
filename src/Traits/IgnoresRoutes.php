@@ -39,13 +39,15 @@ trait IgnoresRoutes
                 return false;
             }
 
-            [$ignoredRouteGroup, $suffix] = str_split($ignoredRoute, strlen($ignoredRoute) -1);
+            $suffix =  substr($ignoredRoute, -1);
+            $ignoredRouteGroup =  substr($ignoredRoute, 0, -1);
 
             if ($suffix === '*' && str_starts_with($route->getIdentifier(), $ignoredRouteGroup)) {
                 return false;
             }
 
-            [$prefix, $ignoredRouteGroup] = str_split($ignoredRoute, 1);
+            $prefix =  substr($ignoredRoute, 0, 1);
+            $ignoredRouteGroup =  substr($ignoredRoute, 1);
 
             if ($prefix === '*' && str_ends_with($route->getIdentifier(), $ignoredRouteGroup)) {
                 return false;

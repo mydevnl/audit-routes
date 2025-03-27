@@ -7,7 +7,7 @@ namespace MyDev\AuditRoutes\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-final readonly class CoversRoute
+final class CoversRoute
 {
     /**
      * @param string | array<int, string> $routes

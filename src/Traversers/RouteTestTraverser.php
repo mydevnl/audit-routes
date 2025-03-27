@@ -28,9 +28,9 @@ class RouteTestTraverser extends NodeVisitorAbstract
      * @param TestAuditor $auditor
      * @return void
      */
-    public function __construct(protected readonly TestAuditor $auditor)
+    public function __construct(protected TestAuditor $auditor)
     {
-        $this->actingMethods = Config::get('audit-routes.tests.acting-methods');
+        $this->actingMethods = Config::array('audit-routes.tests.acting-methods');
     }
 
     /**
@@ -59,7 +59,9 @@ class RouteTestTraverser extends NodeVisitorAbstract
             return null;
         }
 
-        $variableName = strval($node->var->name);
+        /** @var string | \Stringable $name */
+        $name = $node->var->name;
+        $variableName = strval($name);
 
         (new NodeTraverser(
             new StringValueTraverser(function (string $value) use ($variableName): int {

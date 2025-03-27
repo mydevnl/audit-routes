@@ -17,7 +17,7 @@ class MedianScore implements AggregatorInterface
     /** @var int $visitedCount */
     protected int $visitedCount = 0;
 
-    /** @var float $result */
+    /** @var null | float $result */
     protected ?float $result = null;
 
     /**
@@ -62,7 +62,7 @@ class MedianScore implements AggregatorInterface
         unset($this->visitedScores[$score]);
 
         if ($target <= 0) {
-            return $score;
+            return floatval($score);
         }
 
         return $this->getMedian($target, $score);

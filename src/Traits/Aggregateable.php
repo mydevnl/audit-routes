@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
-/** @mixin \MyDev\AuditRoutes\Aggregators\AggregatorInterface */
+use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
+
+/** @mixin AggregatorInterface */
 trait Aggregateable
 {
     use Nameable;
 
-    /** @return float | array<int, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> */
-    public function getResult(): float | array
+    /** @return null | float | array<int | string, AggregatorInterface> */
+    public function getResult(): null | float | array
     {
         if (!property_exists($this, 'result')) {
             return 0;
@@ -27,16 +29,16 @@ trait Aggregateable
     {
         $classParts = explode('\\', get_class($this));
 
-        $snakeCase = preg_replace_callback(
+        $snakeCase = (string) preg_replace_callback(
             '/[A-Z]/',
-            fn(array $matches): string => '_' . strtolower($matches[0]),
+            fn (array $matches): string => '_' . strtolower($matches[0]),
             array_pop($classParts),
         );
 
         return ltrim($snakeCase, '_');
     }
 
-    /** @return array<string, string | float> */
+    /** @return array<string, array<int | string, AggregatorInterface> | null | float | string>> */
     public function toArray(): array
     {
         return [
@@ -46,7 +48,7 @@ trait Aggregateable
         ];
     }
 
-    /** @return array<string, string | float> */
+    /** @return array<string, array<int | string, AggregatorInterface> | null | float | string>> */
     public function jsonSerialize(): array
     {
         return $this->toArray();

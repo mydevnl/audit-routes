@@ -9,11 +9,11 @@ use JsonSerializable;
 class ExportResult implements JsonSerializable
 {
     /**
-     * @param array<int, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> $aggregates
-     * @param array<int, AuditedRoute> $routes
+     * @param array<int | string, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> $aggregates
+     * @param array<int| string, AuditedRoute> $routes
      * @return void
      */
-    public function __construct(public readonly array $aggregates, public readonly array $routes)
+    public function __construct(public array $aggregates, public array $routes)
     {
     }
 

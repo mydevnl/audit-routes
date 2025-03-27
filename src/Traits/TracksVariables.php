@@ -25,7 +25,10 @@ trait TracksVariables
      */
     public function getDeclaredVariable(string $key): string
     {
-        return strval($this->declaredVariables[$key] ?? null);
+        /** @var null | bool| float| int| resource| string $value */
+        $value = $this->declaredVariables[$key] ?? null;
+
+        return strval($value);
     }
 
     /** @return void */

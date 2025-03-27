@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Aggregators;
 
-use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 
-interface AggregatorInterface extends JsonSerializable, Arrayable
+interface AggregatorInterface extends JsonSerializable
 {
     /**
      * @param AuditedRoute $auditedRoute
@@ -27,10 +26,10 @@ interface AggregatorInterface extends JsonSerializable, Arrayable
 
     /**
      * @param null | string $name
-     * @return self
+     * @return static
      */
-    public function setName(?string $name): self;
+    public function setName(?string $name): static;
 
-    /** @return float | array<int, AggregatorInterface> */
-    public function getResult(): float | array;
+    /** @return null | float | array<int | string, AggregatorInterface> */
+    public function getResult(): null | float | array;
 }

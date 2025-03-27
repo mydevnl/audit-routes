@@ -25,7 +25,7 @@ class AuditorFactory
         }
 
         if (is_int($key) && is_string($value)) {
-            return $value::make()->setWeight($key);
+            return $value::make();
         }
 
         throw new InvalidArgumentException('Could not instantiate AuditorInterface');

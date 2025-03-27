@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Output;
 
+use MyDev\AuditRoutes\Output\Console\ConsoleExitCode;
+use MyDev\AuditRoutes\Output\Console\ConsoleResult;
+use MyDev\AuditRoutes\Output\Console\ConsoleTable;
+use MyDev\AuditRoutes\Output\Export\ExportInterface;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class OutputFactory
@@ -46,7 +50,7 @@ class OutputFactory
             $channels[] = $this->exporter;
         }
 
-        return new ConsoleMultiOutput($channels, $this->output);
+        return new OutputCollection($channels, $this->output);
     }
 
     /**

@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use MyDev\AuditRoutes\Auditors\TestAuditor;
 use MyDev\AuditRoutes\Examples\Commands\AdvancedReportingCommand;
 use MyDev\AuditRoutes\Examples\Commands\AuthenticatedCommand;
+use MyDev\AuditRoutes\Examples\Commands\ScopedBindingCommand;
 use MyDev\AuditRoutes\Examples\Commands\TestCoverageCommand;
 
 class AuditRoutesServiceProvider extends ServiceProvider
@@ -27,6 +28,7 @@ class AuditRoutesServiceProvider extends ServiceProvider
         $this->commands([
             AdvancedReportingCommand::class,
             AuthenticatedCommand::class,
+            ScopedBindingCommand::class,
             TestCoverageCommand::class,
         ]);
     }

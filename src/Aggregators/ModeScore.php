@@ -17,7 +17,7 @@ class ModeScore implements AggregatorInterface
     /** @var int $visitedCount */
     protected int $visitedCount = 0;
 
-    /** @var float $result */
+    /** @var null | float $result */
     protected ?float $result = null;
 
     /**

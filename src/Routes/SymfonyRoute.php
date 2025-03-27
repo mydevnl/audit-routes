@@ -9,20 +9,20 @@ use Symfony\Component\Routing\Route;
 class SymfonyRoute implements RouteInterface
 {
     /**
-     * @param null | string $name
+     * @param string $name
      * @param Route $route
      * @return void
      */
-    public function __construct(protected ?string $name, protected Route $route)
+    public function __construct(protected string $name, protected Route $route)
     {
     }
 
     /**
-     * @param null | string $name
+     * @param string $name
      * @param Route $route
      * @return self
      */
-    public static function for(?string $name, Route $route): self
+    public static function for(string $name, Route $route): self
     {
         return new self($name, $route);
     }
@@ -55,5 +55,11 @@ class SymfonyRoute implements RouteInterface
     public function getClass(): string
     {
         return $this->route::class;
+    }
+
+    /** @return null | bool */
+    public function hasScopedBindings(): ?bool
+    {
+        return null;
     }
 }

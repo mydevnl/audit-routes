@@ -20,7 +20,7 @@ trait AssertsRouteMiddleware
      * @param array<int, string>                                                   $ignoredRoutes
      * @param null | string | Closure(AuditedRouteCollection): string              $message
      * @param null | Closure(\MyDev\AuditRoutes\Routes\RouteInterface): bool $when
-     * @return self
+     * @return static
      */
     protected function assertRoutesHaveMiddleware(
         iterable $routes,
@@ -28,7 +28,7 @@ trait AssertsRouteMiddleware
         array $ignoredRoutes = [],
         null | string | Closure $message = null,
         ?Closure $when = null,
-    ): self {
+    ): static {
         $auditor = MiddlewareAuditor::make($middleware)->setPenalty(-1)->when($when ?? fn (): bool => true);
 
         $message ??= function (AuditedRouteCollection $failedRoutes): string {
@@ -45,10 +45,10 @@ trait AssertsRouteMiddleware
      * 
      * @param mixed               $route
      * @param array<int, string>  $middleware
-     * @param null | string: void $message
-     * @return self
+     * @param null | string $message
+     * @return static
      */
-    protected function assertRouteHasMiddleware(mixed $route, array $middleware, ?string $message = null): self
+    protected function assertRouteHasMiddleware(mixed $route, array $middleware, ?string $message = null): static
     {
         $message ??= 'The route is missing the expected middleware';
 

@@ -52,4 +52,10 @@ class StringableRoute implements RouteInterface
     {
         return gettype($this->route);
     }
+
+    /** @return null | bool */
+    public function hasScopedBindings(): ?bool
+    {
+        return null;
+    }
 }

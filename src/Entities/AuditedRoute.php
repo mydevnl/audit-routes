@@ -16,7 +16,7 @@ class AuditedRoute implements Stringable, JsonSerializable
     /** @var int $score */
     protected int $score = 0;
 
-    /** @var array<string, mixed> $results */
+    /** @var array<int | string, mixed> $results */
     protected array $results = [];
 
     /**
@@ -24,7 +24,7 @@ class AuditedRoute implements Stringable, JsonSerializable
      * @param int $benchmark
      * @return void
      */
-    public function __construct(protected readonly RouteInterface $route, protected readonly int $benchmark)
+    public function __construct(protected RouteInterface $route, protected readonly int $benchmark)
     {
     }
 

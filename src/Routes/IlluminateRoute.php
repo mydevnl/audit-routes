@@ -54,4 +54,10 @@ class IlluminateRoute implements RouteInterface
     {
         return $this->route::class;
     }
+
+    /** @return bool */
+    public function hasScopedBindings(): bool
+    {
+        return $this->route->enforcesScopedBindings();
+    }
 }

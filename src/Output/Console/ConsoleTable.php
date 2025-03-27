@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Output;
+namespace MyDev\AuditRoutes\Output\Console;
 
+use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
 use MyDev\AuditRoutes\Enums\ExitCode;
+use MyDev\AuditRoutes\Output\OutputInterface;
 use Symfony\Component\Console\Style\OutputStyle;
 
-class ConsoleExitCode implements OutputInterface
+class ConsoleTable implements OutputInterface
 {
     /**
      * @param OutputStyle $output
@@ -25,9 +27,15 @@ class ConsoleExitCode implements OutputInterface
      */
     public function generate(AuditedRouteCollection $auditedRoutes): ExitCode
     {
-        if ($auditedRoutes->where('status', AuditStatus::Failed->value)->isNotEmpty()) {
-            return ExitCode::Failure;
-        }
+        $this->output->table([
+            'Status',
+            'Route',
+            'Score',
+        ], array_map(fn (AuditedRoute $auditedRoute): array => [
+            $auditedRoute->hasStatus(AuditStatus::Failed) ? '✖' : '✓',
+            $auditedRoute->getDisplayName(),
+            $auditedRoute->getScore(),
+        ], $auditedRoutes->sort()->get()));
 
         return ExitCode::Success;
     }

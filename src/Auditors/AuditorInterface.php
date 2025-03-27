@@ -10,7 +10,7 @@ use MyDev\AuditRoutes\Routes\RouteInterface;
 interface AuditorInterface extends JsonSerializable
 {
     /**
-     * @param null | array $arguments
+     * @param null | array<int | string, mixed> $arguments
      * @return self
      */
     public static function make(?array $arguments = null): self;
@@ -35,19 +35,19 @@ interface AuditorInterface extends JsonSerializable
 
     /**
      * @param int $weight
-     * @return self
+     * @return static
      */
-    public function setWeight(int $weight): self;
+    public function setWeight(int $weight): static;
 
     /**
      * @param int $penalty
-     * @return self
+     * @return static
      */
-    public function setPenalty(int $penalty): self;
+    public function setPenalty(int $penalty): static;
 
     /**
      * @param int $limit
-     * @return self
+     * @return static
      */
-    public function setLimit(int $limit): self;
+    public function setLimit(int $limit): static;
 }

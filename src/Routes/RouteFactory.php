@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Route as SymfonyRoutingRoute;
 class RouteFactory
 {
     /**
-     * @param iterable $routes
+     * @param iterable<int | string, mixed> $routes
      * @throws InvalidArgumentException
      * @return array<int, RouteInterface>
      */
@@ -39,7 +39,7 @@ class RouteFactory
         return match(true) {
             is_string($route)                        => self::buildStringableRoute($route),
             $route instanceof IlluminateRoutingRoute => new IlluminateRoute($route),
-            $route instanceof SymfonyRoutingRoute    => new SymfonyRoute($name, $route),
+            $route instanceof SymfonyRoutingRoute    => new SymfonyRoute((string) $name, $route),
             $route instanceof RouteInterface         => $route,
             default                                  => throw new InvalidArgumentException('Unsupported route'),
         };
@@ -52,6 +52,7 @@ class RouteFactory
     protected static function buildStringableRoute(string $route): RouteInterface
     {
         try {
+            /** @var Router $router */
             $router = App::make(Router::class);
             $resolvedRoute = $router->getRoutes()->getByName($route);
 
@@ -66,12 +67,13 @@ class RouteFactory
     }
 
     /**
-     * @param iterable $routes
-     * @return iterable
+     * @param iterable<int | string, mixed> $routes
+     * @return iterable<int | string, mixed>
      */
     protected static function resolveToAllRoutes(iterable $routes): iterable
     {
         if ($routes === ['*']) {
+            /** @var Router $router */
             $router = App::make(Router::class);
 
             return $router->getRoutes()->getRoutes();

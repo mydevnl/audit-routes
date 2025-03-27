@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Output;
+namespace MyDev\AuditRoutes\Output\Console;
 
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
 use MyDev\AuditRoutes\Enums\ExitCode;
+use MyDev\AuditRoutes\Output\OutputInterface;
 use MyDev\AuditRoutes\Traits\TracksTime;
 use Symfony\Component\Console\Style\OutputStyle;
 

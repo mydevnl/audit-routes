@@ -6,20 +6,32 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
+use MyDev\AuditRoutes\Aggregators\AverageScore;
 use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
+use MyDev\AuditRoutes\Aggregators\Group;
+use MyDev\AuditRoutes\Aggregators\HighestScore;
+use MyDev\AuditRoutes\Aggregators\LowestScore;
+use MyDev\AuditRoutes\Aggregators\MedianScore;
+use MyDev\AuditRoutes\Aggregators\ModeScore;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
+use MyDev\AuditRoutes\Aggregators\TotalAroundBenchmark;
+use MyDev\AuditRoutes\Aggregators\TotalBetweenScores;
 use MyDev\AuditRoutes\Auditors\MiddlewareAuditor;
+use MyDev\AuditRoutes\Auditors\PermissionAuditor;
+use MyDev\AuditRoutes\Auditors\PolicyAuditor;
+use MyDev\AuditRoutes\Auditors\ScopedBindingAuditor;
+use MyDev\AuditRoutes\Auditors\TestAuditor;
 use MyDev\AuditRoutes\AuditRoutes;
 use MyDev\AuditRoutes\Output\Export\ExportFactory;
 use MyDev\AuditRoutes\Output\Export\ExportInterface;
 use MyDev\AuditRoutes\Output\OutputFactory;
 use MyDev\AuditRoutes\Routes\RouteInterface;
 
-class AuthenticatedCommand extends Command
+class ScopedBindingCommand extends Command
 {
-    protected $signature = 'route:audit-auth {--export=} {--filename=}';
-    protected $description = 'Run Authentication Middleware auditing for Laravel routes';
+    protected $signature = 'route:audit-scoped-bindings {--export=} {--filename=}';
+    protected $description = 'Run Scoped Binding Reporting auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -37,14 +49,7 @@ class AuthenticatedCommand extends Command
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
             ->setBenchmark(1)
-            ->run([
-                MiddlewareAuditor::make(['auth'])
-                    ->ignoreRoutes(['api.*'])
-                    ->setName('MiddlewareAuditor auth'),
-                MiddlewareAuditor::make(['auth:sanctum'])
-                    ->when(fn (RouteInterface $route): bool => str_starts_with($route->getIdentifier(), 'api'))
-                    ->setName('MiddlewareAuditor auth:sanctum'),
-            ]);
+            ->run([ScopedBindingAuditor::class]);
 
         return $output->generate($result)->value;
     }
@@ -57,8 +62,9 @@ class AuthenticatedCommand extends Command
             $this->option('filename'),
         )?->setAggregators([
             new ConditionedCumulative('Total routes'),
-            new FailedPercentage('Guest rate'),
-            new SuccessPercentage('Authenticated rate'),
+            new FailedPercentage('Unscoped rate'),
+            new SuccessPercentage('Scoped rate'),
+            new AverageScore('Average scoping'),
         ]);
     }
 }

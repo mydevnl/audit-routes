@@ -23,19 +23,19 @@ class AuditRoutes
     protected array $routes;
 
     /**
-     * @param iterable $routes
+     * @param iterable<int | string, mixed> $routes
      * @throws \InvalidArgumentException
      * @return void
      */
     public function __construct(iterable $routes)
     {
         $this->routes = RouteFactory::collection($routes);
-        $this->benchmark = Config::get('audit-routes.benchmark', 0);
-        $this->defaultIgnoredRoutes = Config::get('audit-routes.ignored-routes', []);
+        $this->benchmark = Config::integer('audit-routes.benchmark', 0);
+        $this->defaultIgnoredRoutes = Config::array('audit-routes.ignored-routes', []);
     }
 
     /**
-     * @param iterable $routes
+     * @param iterable<int | string, mixed> $routes
      * @return self
      */
     public static function for(iterable $routes): self

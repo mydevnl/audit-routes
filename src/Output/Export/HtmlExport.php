@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Output;
+namespace MyDev\AuditRoutes\Output\Export;
 
 use Exception;
 use Illuminate\Support\Facades\Config;

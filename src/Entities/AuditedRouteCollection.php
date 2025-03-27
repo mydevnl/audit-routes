@@ -9,6 +9,7 @@ use Iterator;
 use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
 use UnexpectedValueException;
 
+/** @implements Iterator<int, AuditedRoute> */
 class AuditedRouteCollection implements Iterator
 {
     /** @var int $currentIndex */
@@ -55,7 +56,10 @@ class AuditedRouteCollection implements Iterator
         return !$this->isEmpty();
     }
 
-    /** @return self */
+    /**
+     * @param bool $ascending
+     * @return self
+     */
     public function sort(bool $ascending = true): self
     {
         usort($this->items, function (AuditedRoute $current, AuditedRoute $previous) use ($ascending): int {
@@ -78,7 +82,7 @@ class AuditedRouteCollection implements Iterator
      */
     public function push(AuditedRoute $auditedRoute): self
     {
-        array_push($this->items, $auditedRoute);
+        $this->items[] = $auditedRoute;
 
         return $this;
     }
@@ -134,7 +138,7 @@ class AuditedRouteCollection implements Iterator
 
     /**
      * @param AggregatorInterface ...$aggregators
-     * @return array<int, AggregatorInterface>
+     * @return array<int | string, AggregatorInterface>
      */
     public function aggregate(AggregatorInterface ...$aggregators): array
     {

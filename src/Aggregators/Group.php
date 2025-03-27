@@ -11,7 +11,7 @@ class Group implements AggregatorInterface
 {
     use Aggregateable;
 
-    /** @var array<int, AggregatorInterface> $result */
+    /** @var array<int | string, AggregatorInterface> $result */
     protected array $result = [];
 
     /**

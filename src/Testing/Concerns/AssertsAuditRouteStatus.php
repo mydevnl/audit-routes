@@ -22,7 +22,7 @@ trait AssertsAuditRouteStatus
      * @param string | Closure(AuditedRouteCollection): string                                                       $message
      * @param array<int, string>                                                                                     $ignoredRoutes
      * @param int                                                                                                    $benchmark
-     * @return self
+     * @return static
      */
     protected function assertAuditRoutesOk(
         iterable $routes,
@@ -30,7 +30,7 @@ trait AssertsAuditRouteStatus
         string | Closure $message,
         array $ignoredRoutes = [],
         int $benchmark = 0,
-    ): self {
+    ): static {
         $auditedRoutes = AuditRoutes::for($routes)
             ->setBenchmark($benchmark)
             ->ignoreRoutes($ignoredRoutes)
