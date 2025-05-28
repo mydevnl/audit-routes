@@ -31,24 +31,32 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
     /** @var array<int, Closure(ClassMethod): bool> $testConditions */
     protected array $testConditions = [];
 
+    /** @var bool $isParsed */
+    protected bool $isParsed = false;
+
+    /**
+     * @return void
+     * @throws ReflectionException
+     */
     public function __construct()
     {
         $this->testingMethods = CollectTestingMethods::run();
-
-        $this->routeOccurrences = [];
-        foreach ($this->testingMethods as $testingMethod) {
-            $this->parseTestingMethod($testingMethod);
-            $this->markRouteOccurrences($testingMethod->getRouteOccurrences());
-        }
     }
 
     /**
      * @param RouteInterface $route
      * @return int
-     * @throws ReflectionException
      */
     public function handle(RouteInterface $route): int
     {
+        if (!$this->isParsed) {
+            $this->isParsed = true;
+
+            foreach ($this->testingMethods as $testingMethod) {
+                $this->parseTestingMethod($testingMethod);
+            }
+        }
+
         return $this->getScore($this->getRouteOccurrence($route->getIdentifier()));
     }
 
@@ -80,7 +88,9 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
             }
         }
 
-        $testingMethod->getNodeAccessor()->traverse(new PhpUnitMethodVisitor($testingMethod));
+        $testingMethod->getNodeAccessor()->traverse(new PhpUnitMethodVisitor($this));
+
+        $this->markRouteOccurrences($testingMethod->getRouteOccurrences());
     }
 
     /**

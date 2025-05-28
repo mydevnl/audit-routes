@@ -53,7 +53,7 @@ class PhpUnitDetailedCoverageCommand extends Command
                         return str_contains(strtolower(strval($node->name)), $role);
                     }),
             ])->setName("PHPUnit coverage for acting as '{$role}'"),
-            ['admin', 'user'],
+            ['user', 'admin'],
         );
 
         $auditors[] = PhpUnitAuditor::make()->setName('PHPUnit coverage');

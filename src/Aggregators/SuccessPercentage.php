@@ -12,9 +12,9 @@ class SuccessPercentage extends FailedPercentage
      */
     public function __construct(?string $name = null)
     {
-        $this->setName($name);
-
         parent::__construct();
+
+        $this->setName($name);
     }
 
     /** @return void */

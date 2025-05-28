@@ -85,8 +85,8 @@ class AdvancedReportingCommand extends Command
             $this->option('filename'),
         )?->setAggregators([
             new ConditionedCumulative('Total routes'),
-            new FailedPercentage('Failed rate'),
             new SuccessPercentage('Success rate'),
+            new FailedPercentage('Failed rate'),
             new LowestScore('Lowest'),
             new HighestScore('Highest'),
             new AverageScore('Average'),
