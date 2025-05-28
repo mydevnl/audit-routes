@@ -10,16 +10,16 @@ use MyDev\AuditRoutes\Aggregators\AverageScore;
 use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
-use MyDev\AuditRoutes\Auditors\ScopedBindingAuditor;
+use MyDev\AuditRoutes\Auditors\PhpUnitAuditor;
 use MyDev\AuditRoutes\AuditRoutes;
 use MyDev\AuditRoutes\Output\Export\ExportFactory;
 use MyDev\AuditRoutes\Output\Export\ExportInterface;
 use MyDev\AuditRoutes\Output\OutputFactory;
 
-class ScopedBindingCommand extends Command
+class PhpUnitCoverageCommand extends Command
 {
-    protected $signature = 'route:audit-scoped-bindings {--export=} {--filename=}';
-    protected $description = 'Run Scoped Binding Reporting auditing for Laravel routes';
+    protected $signature = 'route:audit-php-unit-coverage {--benchmark=1} {--export=} {--filename=}';
+    protected $description = 'Run Test Coverage auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -30,14 +30,17 @@ class ScopedBindingCommand extends Command
         parent::__construct();
     }
 
-    /** @return int */
+    /**
+     * @return int
+     * @throws \ReflectionException
+     */
     public function handle(): int
     {
         $output = OutputFactory::channel($this->output)->setExporter($this->getExporter())->build();
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
-            ->setBenchmark(1)
-            ->run([ScopedBindingAuditor::class]);
+            ->setBenchmark((int) $this->option('benchmark'))
+            ->run([PhpUnitAuditor::make()]);
 
         return $output->generate($result)->value;
     }
@@ -50,9 +53,9 @@ class ScopedBindingCommand extends Command
             $this->option('filename'),
         )?->setAggregators([
             new ConditionedCumulative('Total routes'),
-            new FailedPercentage('Unscoped rate'),
-            new SuccessPercentage('Scoped rate'),
-            new AverageScore('Average scoping'),
+            new FailedPercentage('Uncovered rate'),
+            new SuccessPercentage('Covered rate'),
+            new AverageScore('Average coverage'),
         ]);
     }
 }

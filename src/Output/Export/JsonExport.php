@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Output\Export;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Storage;
 use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Entities\ExportResult;
@@ -40,13 +39,13 @@ class JsonExport implements ExportInterface
         $path = Config::string('audit-routes.output.directory');
         $fullPath = $path . DIRECTORY_SEPARATOR . $this->filename;
 
-        if (!Storage::directoryExists($path)) {
-            Storage::createDirectory($path);
+        if (!is_dir($path)) {
+            mkdir($path, recursive: true);
         }
 
-        Storage::put($fullPath, $this->getOutput($auditedRoutes));
+        file_put_contents($fullPath, $this->getOutput($auditedRoutes));
 
-        $this->output->section('Report exported to: ' . Storage::path($fullPath));
+        $this->output->section("Report exported to: {$fullPath}");
 
         return ExitCode::Success;
     }

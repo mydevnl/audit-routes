@@ -36,7 +36,7 @@ class RouteFactory
      */
     public static function build(mixed $route, null | string | int $name = null): RouteInterface
     {
-        return match(true) {
+        return match (true) {
             is_string($route)                        => self::buildStringableRoute($route),
             $route instanceof IlluminateRoutingRoute => new IlluminateRoute($route),
             $route instanceof SymfonyRoutingRoute    => new SymfonyRoute((string) $name, $route),

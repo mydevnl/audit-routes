@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Traversers;
+namespace MyDev\AuditRoutes\Visitors;
 
 use Closure;
 use PhpParser\Node;
-use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\NodeVisitorAbstract;
 
-class StringValueTraverser extends NodeVisitorAbstract
+class VariableValueVisitor extends NodeVisitorAbstract
 {
     /**
      * @param Closure(string): ?int $callback
@@ -25,10 +25,14 @@ class StringValueTraverser extends NodeVisitorAbstract
      */
     public function enterNode(Node $node): ?int
     {
-        if (!$node instanceof String_) {
+        if (!$node instanceof Variable) {
             return null;
         }
 
-        return call_user_func($this->callback, $node->value);
+        if ($node->name === 'this') {
+            return null;
+        }
+
+        return call_user_func($this->callback, $node->name);
     }
 }

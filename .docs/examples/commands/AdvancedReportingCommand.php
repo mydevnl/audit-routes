@@ -19,9 +19,9 @@ use MyDev\AuditRoutes\Aggregators\TotalAroundBenchmark;
 use MyDev\AuditRoutes\Aggregators\TotalBetweenScores;
 use MyDev\AuditRoutes\Auditors\MiddlewareAuditor;
 use MyDev\AuditRoutes\Auditors\PermissionAuditor;
+use MyDev\AuditRoutes\Auditors\PhpUnitAuditor;
 use MyDev\AuditRoutes\Auditors\PolicyAuditor;
 use MyDev\AuditRoutes\Auditors\ScopedBindingAuditor;
-use MyDev\AuditRoutes\Auditors\TestAuditor;
 use MyDev\AuditRoutes\AuditRoutes;
 use MyDev\AuditRoutes\Output\Export\ExportFactory;
 use MyDev\AuditRoutes\Output\Export\ExportInterface;
@@ -42,7 +42,10 @@ class AdvancedReportingCommand extends Command
         parent::__construct();
     }
 
-    /** @return int */
+    /**
+     * @return int
+     * @throws \ReflectionException
+     */
     public function handle(): int
     {
         $output = OutputFactory::channel($this->output)->setExporter($this->getExporter())->build();
@@ -54,7 +57,7 @@ class AdvancedReportingCommand extends Command
                 PermissionAuditor::class => -100,
                 ScopedBindingAuditor::make()
                     ->setPenalty(-500),
-                TestAuditor::make()
+                PhpUnitAuditor::make()
                     ->setWeight(250)
                     ->setPenalty(-10000)
                     ->setLimit(2333),

@@ -11,9 +11,9 @@ class ScopedBindingAuditor implements AuditorInterface
 {
     use Auditable;
 
-    protected const Ok = 2;
-    protected const NotApplicable = 1;
-    protected const Fail = 0;
+    protected const OK = 2;
+    protected const NOT_APPLICABLE = 1;
+    protected const FAIL = 0;
 
     /**
      * @param RouteInterface $route
@@ -22,19 +22,19 @@ class ScopedBindingAuditor implements AuditorInterface
     public function handle(RouteInterface $route): int
     {
         if ($route->hasScopedBindings()) {
-            return $this->getScore(self::Ok);
+            return $this->getScore(self::OK);
         }
 
         if (is_null($route->hasScopedBindings())) {
-            return $this->getScore(self::NotApplicable);
+            return $this->getScore(self::NOT_APPLICABLE);
         }
 
         preg_match_all("/{(.*?)}/", $route->getUri(), $bindings);
 
         if (count($bindings[0]) > 1) {
-            return $this->getScore(self::Fail);
+            return $this->getScore(self::FAIL);
         }
 
-        return $this->getScore(self::NotApplicable);
+        return $this->getScore(self::NOT_APPLICABLE);
     }
 }

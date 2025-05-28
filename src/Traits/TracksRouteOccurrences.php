@@ -10,15 +10,31 @@ trait TracksRouteOccurrences
     protected array $routeOccurrences = [];
 
     /**
-     * @param string $route
+     * @param string ...$routes
      * @return void
      */
-    public function markRouteOccurrence(string $route): void
+    public function markRouteOccurrence(string ...$routes): void
     {
-        if (!isset($this->routeOccurrences[$route])) {
-            $this->routeOccurrences[$route] = 0;
+        foreach ($routes as $route) {
+            if (!isset($this->routeOccurrences[$route])) {
+                $this->routeOccurrences[$route] = 0;
+            }
+            $this->routeOccurrences[$route]++;
         }
-        $this->routeOccurrences[$route]++;
+    }
+
+    /**
+     * @param array $routeOccurrences
+     * @return void
+     */
+    public function markRouteOccurrences(array $routeOccurrences): void
+    {
+        foreach ($routeOccurrences as $route => $occurrences) {
+            if (!isset($this->routeOccurrences[$route])) {
+                $this->routeOccurrences[$route] = 0;
+            }
+            $this->routeOccurrences[$route] += $occurrences;
+        }
     }
 
     /**
@@ -28,5 +44,11 @@ trait TracksRouteOccurrences
     public function getRouteOccurrence(string $route): int
     {
         return $this->routeOccurrences[$route] ?? 0;
+    }
+
+    /** @return array<string, int> */
+    public function getRouteOccurrences(): array
+    {
+        return $this->routeOccurrences;
     }
 }

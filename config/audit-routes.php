@@ -29,7 +29,7 @@ return [
         ],
     ],
     'output' => [
-        'directory'     => 'audit-routes',
+        'directory'     => 'storage/exports/audit-routes',
         'html-template' => 'audit-routes::output.report',
     ],
 ];

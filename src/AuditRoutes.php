@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes;
 
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
@@ -24,7 +25,7 @@ class AuditRoutes
 
     /**
      * @param iterable<int | string, mixed> $routes
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return void
      */
     public function __construct(iterable $routes)
@@ -45,7 +46,7 @@ class AuditRoutes
 
     /**
      * @param  array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return AuditedRouteCollection
      */
     public function run(array $auditors): AuditedRouteCollection

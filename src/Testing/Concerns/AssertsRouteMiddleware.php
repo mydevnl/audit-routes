@@ -7,20 +7,23 @@ namespace MyDev\AuditRoutes\Testing\Concerns;
 use Closure;
 use MyDev\AuditRoutes\Auditors\MiddlewareAuditor;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
+use MyDev\AuditRoutes\Routes\RouteInterface;
+use ReflectionException;
 
 trait AssertsRouteMiddleware
 {
     use AssertsAuditRouteStatus;
 
     /**
-     * Assert that each given route is has the expected middleware implemented.
+     * Assert that each given route is having the expected middleware implemented.
      *
-     * @param iterable                                                             $routes
-     * @param array<int, string>                                                   $middleware
-     * @param array<int, string>                                                   $ignoredRoutes
-     * @param null | string | Closure(AuditedRouteCollection): string              $message
-     * @param null | Closure(\MyDev\AuditRoutes\Routes\RouteInterface): bool $when
+     * @param iterable $routes
+     * @param array<int, string> $middleware
+     * @param array<int, string> $ignoredRoutes
+     * @param null | string | Closure(AuditedRouteCollection): string $message
+     * @param null | Closure(RouteInterface): bool $when
      * @return static
+     * @throws ReflectionException
      */
     protected function assertRoutesHaveMiddleware(
         iterable $routes,
@@ -42,7 +45,7 @@ trait AssertsRouteMiddleware
 
     /**
      * Assert a specific route has the expected middleware implemented.
-     * 
+     *
      * @param mixed               $route
      * @param array<int, string>  $middleware
      * @param null | string $message

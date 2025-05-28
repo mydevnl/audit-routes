@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Utilities;
 
 use Closure;
-use Illuminate\Support\Facades\File;
 use ReflectionClass;
 use ReflectionException;
 
@@ -46,7 +45,7 @@ class ClassDiscovery
      */
     public static function source(string|object $class): string
     {
-        return File::get((string) (new ReflectionClass($class))->getFileName());
+        return file_get_contents((string) (new ReflectionClass($class))->getFileName());
     }
 
     /**
@@ -58,8 +57,9 @@ class ClassDiscovery
     protected static function find(string $directory, Closure $callback): array
     {
         $found = [];
+        $absolutePath = getcwd() . DIRECTORY_SEPARATOR . $directory;
 
-        foreach (File::allFiles(getcwd() . '/' . $directory) as $file) {
+        foreach (FileDiscovery::find($absolutePath, 'php') as $file) {
             $namespacedClassName = self::toPSR4Namespace($file->getPathName());
 
             if ($callback(new ReflectionClass($namespacedClassName))) {
@@ -76,14 +76,14 @@ class ClassDiscovery
      */
     protected static function toPsr4Namespace(string $filePath): string
     {
-        $partialName = explode('/', str_replace((string) getcwd(), '', $filePath));
-        $partialName = array_map(
-            fn (string $folder): string => ucfirst($folder),
-            $partialName
+        $relativePath = str_replace((string) getcwd(), '', $filePath);
+        $partialNames = array_map(
+            fn (string $directory): string => ucfirst($directory),
+            explode(DIRECTORY_SEPARATOR, $relativePath)
         );
 
         /** @var class-string $psr4Namespace */
-        $psr4Namespace = implode('\\', str_replace('.php', '', $partialName));
+        $psr4Namespace = substr(implode('\\', $partialNames), 0, -4);
 
         return $psr4Namespace;
     }

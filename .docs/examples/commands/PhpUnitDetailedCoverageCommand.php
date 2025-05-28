@@ -10,16 +10,21 @@ use MyDev\AuditRoutes\Aggregators\AverageScore;
 use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
-use MyDev\AuditRoutes\Auditors\TestAuditor;
+use MyDev\AuditRoutes\Auditors\PhpUnitAuditor;
 use MyDev\AuditRoutes\AuditRoutes;
+use MyDev\AuditRoutes\Entities\NodeAccessor;
 use MyDev\AuditRoutes\Output\Export\ExportFactory;
 use MyDev\AuditRoutes\Output\Export\ExportInterface;
 use MyDev\AuditRoutes\Output\OutputFactory;
+use PhpParser\Node;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Stmt\ClassMethod;
+use ReflectionException;
 
-class TestCoverageCommand extends Command
+class PhpUnitDetailedCoverageCommand extends Command
 {
-    protected $signature = 'route:audit-test-coverage {--benchmark=1} {--export=} {--filename=}';
-    protected $description = 'Run Test Coverage auditing for Laravel routes';
+    protected $signature = 'route:audit-php-unit-detailed-coverage {--benchmark=1} {--export=} {--filename=}';
+    protected $description = 'Run PHPUnit auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -30,14 +35,32 @@ class TestCoverageCommand extends Command
         parent::__construct();
     }
 
-    /** @return int */
+    /**
+     * @return int
+     * @throws ReflectionException
+     */
     public function handle(): int
     {
         $output = OutputFactory::channel($this->output)->setExporter($this->getExporter())->build();
 
+        $auditors = array_map(
+            fn (string $role): PhpUnitAuditor => PhpUnitAuditor::make([
+                fn (ClassMethod $node): bool => (bool) (new NodeAccessor($node))
+                    ->find(function (MethodCall $node): bool {
+                        return strval($node->name) === 'actingAs';
+                    })
+                    ?->has(function (Node $node) use ($role): bool {
+                        return str_contains(strtolower(strval($node->name)), $role);
+                    }),
+            ])->setName("PHPUnit coverage for acting as '{$role}'"),
+            ['admin', 'user'],
+        );
+
+        $auditors[] = PhpUnitAuditor::make()->setName('PHPUnit coverage');
+
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
             ->setBenchmark((int) $this->option('benchmark'))
-            ->run([TestAuditor::make()]);
+            ->run($auditors);
 
         return $output->generate($result)->value;
     }

@@ -7,6 +7,7 @@ namespace MyDev\AuditRoutes\Traits;
 use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\Routes\RouteInterface;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 
 /** @mixin AuditorInterface */
@@ -27,9 +28,10 @@ trait Auditable
 
     /**
      * @param null | array<int | string, mixed> $arguments
-     * @return self
+     * @return AuditorInterface
+     * @throws ReflectionException
      */
-    public static function make(?array $arguments = null): self
+    public static function make(?array $arguments = null): AuditorInterface
     {
         $self = new self();
 
@@ -43,6 +45,7 @@ trait Auditable
     /**
      * @param RouteInterface $route
      * @return null | int
+     * @throws ReflectionException
      */
     public function run(RouteInterface $route): ?int
     {
