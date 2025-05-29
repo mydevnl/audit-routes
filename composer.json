@@ -1,7 +1,6 @@
 {
     "name": "mydevnl/audit-routes",
     "description": "Gain insights into the security and protection of your Laravel routes. Audit Routes is your new best friend for keeping your application rock-solid!",
-    "version": "0.2.2",
     "keywords": [
         "Audit Reports",
         "Audit",
@@ -51,7 +50,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "v1-dev"
+            "dev-main": "0.2.x-dev"
         },
         "laravel": {
             "providers": [
