@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
-use MyDev\AuditRoutes\Routes\RouteInterface;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 
 trait IgnoresRoutes
 {

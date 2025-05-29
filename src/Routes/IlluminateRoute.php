@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Routes;
 
 use Illuminate\Routing\Route;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 
 class IlluminateRoute implements RouteInterface
 {

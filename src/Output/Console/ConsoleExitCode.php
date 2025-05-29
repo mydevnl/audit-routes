@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Output\Console;
 
+use MyDev\AuditRoutes\Contracts\OutputInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
 use MyDev\AuditRoutes\Enums\ExitCode;
-use MyDev\AuditRoutes\Output\OutputInterface;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class ConsoleExitCode implements OutputInterface

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Aggregators;
+namespace MyDev\AuditRoutes\Contracts;
 
 use JsonSerializable;
 use MyDev\AuditRoutes\Entities\AuditedRoute;

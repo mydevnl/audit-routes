@@ -24,7 +24,7 @@ trait TracksRouteOccurrences
     }
 
     /**
-     * @param array $routeOccurrences
+     * @param array<string, int> $routeOccurrences
      * @return void
      */
     public function markRouteOccurrences(array $routeOccurrences): void

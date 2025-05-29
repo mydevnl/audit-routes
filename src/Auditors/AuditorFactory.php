@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Auditors;
 
 use InvalidArgumentException;
+use MyDev\AuditRoutes\Contracts\AuditorInterface;
 
 class AuditorFactory
 {

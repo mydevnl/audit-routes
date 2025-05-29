@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Output\Export;
-
-use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
-use MyDev\AuditRoutes\Output\OutputInterface;
+namespace MyDev\AuditRoutes\Contracts;
 
 interface ExportInterface extends OutputInterface
 {

@@ -23,10 +23,10 @@ use MyDev\AuditRoutes\Auditors\PhpUnitAuditor;
 use MyDev\AuditRoutes\Auditors\PolicyAuditor;
 use MyDev\AuditRoutes\Auditors\ScopedBindingAuditor;
 use MyDev\AuditRoutes\AuditRoutes;
+use MyDev\AuditRoutes\Contracts\ExportInterface;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Output\Export\ExportFactory;
-use MyDev\AuditRoutes\Output\Export\ExportInterface;
 use MyDev\AuditRoutes\Output\OutputFactory;
-use MyDev\AuditRoutes\Routes\RouteInterface;
 
 class AdvancedReportingCommand extends Command
 {

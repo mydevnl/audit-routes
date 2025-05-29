@@ -13,7 +13,7 @@ interface RouteOccurrenceTrackerInterface
     public function markRouteOccurrence(string ...$routes): void;
 
     /**
-     * @param array $routeOccurrences
+     * @param array<string, int> $routeOccurrences
      * @return void
      */
     public function markRouteOccurrences(array $routeOccurrences): void;

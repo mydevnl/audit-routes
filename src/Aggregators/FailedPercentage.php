@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Aggregators;
 
+use MyDev\AuditRoutes\Contracts\AggregatorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Enums\AuditStatus;
 use MyDev\AuditRoutes\Traits\Aggregateable;

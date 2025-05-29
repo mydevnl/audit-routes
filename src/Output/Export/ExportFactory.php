@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Output\Export;
 
 use InvalidArgumentException;
+use MyDev\AuditRoutes\Contracts\ExportInterface;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class ExportFactory

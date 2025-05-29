@@ -7,10 +7,11 @@ namespace MyDev\AuditRoutes\Auditors;
 use Closure;
 use InvalidArgumentException;
 use MyDev\AuditRoutes\Actions\CollectTestingMethods;
+use MyDev\AuditRoutes\Contracts\AuditorInterface;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Contracts\RouteOccurrenceTrackerInterface;
 use MyDev\AuditRoutes\Contracts\VariableTrackerInterface;
 use MyDev\AuditRoutes\Entities\TestingMethod;
-use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Traits\Auditable;
 use MyDev\AuditRoutes\Traits\TracksRouteOccurrences;
 use MyDev\AuditRoutes\Traits\TracksVariables;
@@ -67,40 +68,7 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
      */
     public function setArguments(?array $arguments): self
     {
-        if ($arguments){
-            $this->validateArguments($arguments);
-        }
-        $this->testConditions = $arguments ?? [];
-
-        return $this;
-    }
-
-    /**
-     * @param TestingMethod $testingMethod
-     * @return void
-     */
-    protected function parseTestingMethod(TestingMethod $testingMethod): void
-    {
-        foreach ($this->testConditions as $testCondition) {
-            $node = $testingMethod->getNodeAccessor()->getNode();
-            if (!$node instanceof ClassMethod || !$testCondition($node)) {
-                return;
-            }
-        }
-
-        $testingMethod->getNodeAccessor()->traverse(new PhpUnitMethodVisitor($this));
-
-        $this->markRouteOccurrences($testingMethod->getRouteOccurrences());
-    }
-
-    /**
-     * @param array<int | string, mixed> $arguments
-     * @return void
-     * @throws InvalidArgumentException|ReflectionException
-     */
-    protected function validateArguments(array $arguments): void
-    {
-        foreach ($arguments as $argument) {
+        foreach ($arguments ?? [] as $argument) {
             if (!$argument instanceof Closure) {
                 throw new InvalidArgumentException('Arguments must be an instance of Closure.');
             }
@@ -117,5 +85,27 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
                 throw new InvalidArgumentException('First argument must be an instance of ClassMethod.');
             }
         }
+        /** @var null | array<int, Closure(ClassMethod): bool> $arguments */
+        $this->testConditions = $arguments ?? [];
+
+        return $this;
+    }
+
+    /**
+     * @param TestingMethod $testingMethod
+     * @return void
+     */
+    protected function parseTestingMethod(TestingMethod $testingMethod): void
+    {
+        foreach ($this->testConditions as $testCondition) {
+            $node = $testingMethod->getNodeAccessor()?->getNode();
+            if (!$node instanceof ClassMethod || !$testCondition($node)) {
+                return;
+            }
+        }
+
+        $testingMethod->getNodeAccessor()?->traverse(new PhpUnitMethodVisitor($this));
+
+        $this->markRouteOccurrences($testingMethod->getRouteOccurrences());
     }
 }

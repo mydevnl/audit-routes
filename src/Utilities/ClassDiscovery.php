@@ -45,7 +45,7 @@ class ClassDiscovery
      */
     public static function source(string|object $class): string
     {
-        return file_get_contents((string) (new ReflectionClass($class))->getFileName());
+        return (string) file_get_contents((string) (new ReflectionClass($class))->getFileName());
     }
 
     /**

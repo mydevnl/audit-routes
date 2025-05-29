@@ -17,7 +17,7 @@ final class CoversRoute
     {
     }
 
-    /**  @return string | array<int, string> */
+    /** @return string | array<int, string> */
     public function routes(): string | array
     {
         return $this->routes;

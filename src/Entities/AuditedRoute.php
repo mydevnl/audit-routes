@@ -6,9 +6,9 @@ namespace MyDev\AuditRoutes\Entities;
 
 use JsonSerializable;
 use MyDev\AuditRoutes\Auditors\AuditorFactory;
-use MyDev\AuditRoutes\Auditors\AuditorInterface;
+use MyDev\AuditRoutes\Contracts\AuditorInterface;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Enums\AuditStatus;
-use MyDev\AuditRoutes\Routes\RouteInterface;
 use Stringable;
 
 class AuditedRoute implements Stringable, JsonSerializable

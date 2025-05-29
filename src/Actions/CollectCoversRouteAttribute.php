@@ -11,7 +11,7 @@ use ReflectionMethod;
 class CollectCoversRouteAttribute
 {
     /**
-     * @param ReflectionClass|ReflectionMethod $reflectionObject
+     * @param ReflectionClass<object>|ReflectionMethod $reflectionObject
      * @return array<int, string>
      */
     public static function run(ReflectionClass|ReflectionMethod $reflectionObject): array

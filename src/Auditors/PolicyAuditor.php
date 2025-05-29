@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Auditors;
 
-use MyDev\AuditRoutes\Routes\RouteInterface;
+use MyDev\AuditRoutes\Contracts\AuditorInterface;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Traits\Auditable;
 
 class PolicyAuditor implements AuditorInterface

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Testing\Concerns;
 
 use Closure;
-use MyDev\AuditRoutes\Auditors\AuditorInterface;
 use MyDev\AuditRoutes\AuditRoutes;
+use MyDev\AuditRoutes\Contracts\AuditorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\AuditStatus;
 use PHPUnit\Framework\Assert;

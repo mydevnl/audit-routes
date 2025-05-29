@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Routes;
 
+use MyDev\AuditRoutes\Contracts\RouteInterface;
+
 class StringableRoute implements RouteInterface
 {
     /**

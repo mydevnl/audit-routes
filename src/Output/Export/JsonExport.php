@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Output\Export;
 
 use Illuminate\Support\Facades\Config;
-use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
+use MyDev\AuditRoutes\Contracts\AggregatorInterface;
+use MyDev\AuditRoutes\Contracts\ExportInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Entities\ExportResult;
 use MyDev\AuditRoutes\Enums\ExitCode;

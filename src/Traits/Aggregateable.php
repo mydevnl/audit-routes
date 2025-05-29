@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
-use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
+use MyDev\AuditRoutes\Contracts\AggregatorInterface;
 
 /** @mixin AggregatorInterface */
 trait Aggregateable
@@ -38,7 +38,7 @@ trait Aggregateable
         return ltrim($snakeCase, '_');
     }
 
-    /** @return array<string, array<int | string, AggregatorInterface> | null | float | string>> */
+    /** @return array<string, array<int|string, AggregatorInterface>|null|float|string> */
     public function toArray(): array
     {
         return [
@@ -48,7 +48,7 @@ trait Aggregateable
         ];
     }
 
-    /** @return array<string, array<int | string, AggregatorInterface> | null | float | string>> */
+    /** @return array<string, array<int|string, AggregatorInterface>|null|float|string> */
     public function jsonSerialize(): array
     {
         return $this->toArray();

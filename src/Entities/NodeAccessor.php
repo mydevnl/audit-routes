@@ -40,7 +40,7 @@ class NodeAccessor
     }
 
     /**
-     * @param class-string<NodeAbstract> | Closure(NodeAbstract): mixed $filter
+     * @param class-string | Closure(Node): bool $filter
      * @return bool
      * @throws ReflectionException
      */
@@ -50,7 +50,7 @@ class NodeAccessor
     }
 
     /**
-     * @param class-string<NodeAbstract> | Closure(object): mixed $filter
+     * @param class-string | Closure(Node): bool $filter
      * @return null | self
      * @throws ReflectionException
      */
@@ -62,7 +62,7 @@ class NodeAccessor
     }
 
     /**
-     * @param class-string<NodeAbstract> | Closure(object): mixed $filter
+     * @param class-string | Closure(Node): bool $filter
      * @param null | int $returnValue
      * @return array<int, self>
      * @throws ReflectionException
@@ -97,7 +97,7 @@ class NodeAccessor
     }
 
     /**
-     * @param Closure(object): mixed $callback
+     * @param Closure(Node): mixed $callback
      * @param null | int $returnValue
      * @return void
      * @throws ReflectionException

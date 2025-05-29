@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Output;
 
+use MyDev\AuditRoutes\Contracts\ExportInterface;
+use MyDev\AuditRoutes\Contracts\OutputInterface;
 use MyDev\AuditRoutes\Output\Console\ConsoleExitCode;
 use MyDev\AuditRoutes\Output\Console\ConsoleResult;
 use MyDev\AuditRoutes\Output\Console\ConsoleTable;
-use MyDev\AuditRoutes\Output\Export\ExportInterface;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class OutputFactory

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Routes;
+namespace MyDev\AuditRoutes\Contracts;
 
 interface RouteInterface
 {

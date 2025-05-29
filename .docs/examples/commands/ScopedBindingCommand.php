@@ -12,8 +12,8 @@ use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
 use MyDev\AuditRoutes\Auditors\ScopedBindingAuditor;
 use MyDev\AuditRoutes\AuditRoutes;
+use MyDev\AuditRoutes\Contracts\ExportInterface;
 use MyDev\AuditRoutes\Output\Export\ExportFactory;
-use MyDev\AuditRoutes\Output\Export\ExportInterface;
 use MyDev\AuditRoutes\Output\OutputFactory;
 
 class ScopedBindingCommand extends Command

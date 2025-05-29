@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MyDev\AuditRoutes\Auditors;
+namespace MyDev\AuditRoutes\Contracts;
 
 use JsonSerializable;
-use MyDev\AuditRoutes\Routes\RouteInterface;
 
 interface AuditorInterface extends JsonSerializable
 {

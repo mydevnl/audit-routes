@@ -34,8 +34,10 @@ class TestingMethod implements VariableTrackerInterface, RouteOccurrenceTrackerI
         return $this->method->name;
     }
 
-    /** @return NodeAccessor */
-    public function getNodeAccessor(): NodeAccessor
+    /**
+     * @return NodeAccessor|null
+     */
+    public function getNodeAccessor(): ?NodeAccessor
     {
         return $this->nodeAccessor;
     }

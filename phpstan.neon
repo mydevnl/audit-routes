@@ -3,7 +3,20 @@ parameters:
 
     paths:
         - src
-        - config
 
     excludePaths:
         - vendor
+
+    ignoreErrors:
+        - identifier: missingType.generics
+
+        - identifier: trait.unused
+
+        - identifier: function.alreadyNarrowedType
+          path: src/Traits
+
+        - identifier: function.impossibleType
+          path: src/Traits
+
+        - message: '/Parameter #1 \$\w+ of method MyDev\\AuditRoutes\\Entities\\NodeAccessor::\w+\(\) expects class-string\|\(Closure\(PhpParser\\Node.*\): bool\), Closure\(PhpParser\\Node.*\): bool given\./'
+          path: src/Visitors

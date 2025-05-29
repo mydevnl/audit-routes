@@ -20,7 +20,7 @@ class CallbackVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
+     * @param NodeAbstract $node
      * @return null | int
      */
     public function enterNode(Node $node): ?int

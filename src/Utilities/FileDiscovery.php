@@ -20,7 +20,10 @@ class FileDiscovery
      */
     public static function find(string $path, ?string $extension = null): array
     {
-        return iterator_to_array(self::findFilesAsIterator($path, $extension));
+        /** @var array<int, SplFileInfo> $result */
+        $result = iterator_to_array(self::findFilesAsIterator($path, $extension));
+
+        return $result;
     }
 
     /**

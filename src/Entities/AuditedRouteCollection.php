@@ -6,7 +6,7 @@ namespace MyDev\AuditRoutes\Entities;
 
 use Closure;
 use Iterator;
-use MyDev\AuditRoutes\Aggregators\AggregatorInterface;
+use MyDev\AuditRoutes\Contracts\AggregatorInterface;
 use UnexpectedValueException;
 
 /** @implements Iterator<int, AuditedRoute> */

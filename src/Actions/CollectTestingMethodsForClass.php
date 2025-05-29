@@ -16,8 +16,8 @@ use ReflectionMethod;
 class CollectTestingMethodsForClass
 {
     /**
-     * @param string $class
-     * @return array<int, self>
+     * @param class-string $class
+     * @return array<int, TestingMethod>
      * @throws ReflectionException
      */
     public static function run(string $class): array

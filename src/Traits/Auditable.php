@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
-use MyDev\AuditRoutes\Auditors\AuditorInterface;
-use MyDev\AuditRoutes\Routes\RouteInterface;
+use MyDev\AuditRoutes\Contracts\AuditorInterface;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -45,7 +45,6 @@ trait Auditable
     /**
      * @param RouteInterface $route
      * @return null | int
-     * @throws ReflectionException
      */
     public function run(RouteInterface $route): ?int
     {

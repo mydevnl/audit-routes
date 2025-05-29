@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Routes;
 
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use Symfony\Component\Routing\Route;
 
 class SymfonyRoute implements RouteInterface

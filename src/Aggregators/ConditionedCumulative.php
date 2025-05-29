@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Aggregators;
 
 use Closure;
+use MyDev\AuditRoutes\Contracts\AggregatorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Traits\Aggregateable;
 

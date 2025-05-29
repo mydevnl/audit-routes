@@ -6,8 +6,8 @@ namespace Tests\AuditRoutes\Examples;
 
 use MyDev\AuditRoutes\Auditors\PermissionAuditor;
 use MyDev\AuditRoutes\Auditors\PolicyAuditor;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
-use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Testing\Concerns\AssertsAuditRoutes;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;

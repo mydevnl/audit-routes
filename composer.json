@@ -37,7 +37,8 @@
     },
     "require-dev": {
         "nikic/php-parser": "^5.1",
-        "phpunit/phpunit": "^11.3"
+        "phpunit/phpunit": "^11.3",
+        "phpstan/phpstan": "2.1.x-dev"
     },
     "autoload": {
         "psr-4": {

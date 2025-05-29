@@ -9,6 +9,7 @@ use Illuminate\Routing\Route as IlluminateRoutingRoute;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use InvalidArgumentException;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use Symfony\Component\Routing\Route as SymfonyRoutingRoute;
 
 class RouteFactory

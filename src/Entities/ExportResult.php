@@ -9,7 +9,7 @@ use JsonSerializable;
 class ExportResult implements JsonSerializable
 {
     /**
-     * @param array<int | string, \MyDev\AuditRoutes\Aggregators\AggregatorInterface> $aggregates
+     * @param array<int | string, \MyDev\AuditRoutes\Contracts\AggregatorInterface> $aggregates
      * @param array<int| string, AuditedRoute> $routes
      * @return void
      */

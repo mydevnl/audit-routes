@@ -33,6 +33,8 @@ class VariableValueVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        return call_user_func($this->callback, $node->name);
+        $value = is_string($node->name) ? $node->name : json_encode($node->name);
+
+        return call_user_func($this->callback, (string) $value);
     }
 }

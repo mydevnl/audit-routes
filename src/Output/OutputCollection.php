@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Output;
 
+use MyDev\AuditRoutes\Contracts\OutputInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Enums\ExitCode;
 use Symfony\Component\Console\Style\OutputStyle;

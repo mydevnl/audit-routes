@@ -6,8 +6,8 @@ namespace MyDev\AuditRoutes\Testing\Concerns;
 
 use Closure;
 use MyDev\AuditRoutes\Auditors\PhpUnitAuditor;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
-use MyDev\AuditRoutes\Routes\RouteInterface;
 
 trait AssertsRouteTested
 {

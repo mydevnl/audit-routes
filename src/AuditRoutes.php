@@ -6,11 +6,11 @@ namespace MyDev\AuditRoutes;
 
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
-use MyDev\AuditRoutes\Auditors\AuditorInterface;
+use MyDev\AuditRoutes\Contracts\AuditorInterface;
+use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Routes\RouteFactory;
-use MyDev\AuditRoutes\Routes\RouteInterface;
 use MyDev\AuditRoutes\Traits\IgnoresRoutes;
 
 class AuditRoutes
