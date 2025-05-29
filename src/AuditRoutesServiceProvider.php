@@ -7,9 +7,9 @@ namespace MyDev\AuditRoutes;
 use Illuminate\Support\ServiceProvider;
 use MyDev\AuditRoutes\Examples\Commands\AdvancedReportingCommand;
 use MyDev\AuditRoutes\Examples\Commands\AuthenticatedCommand;
+use MyDev\AuditRoutes\Examples\Commands\PhpUnitCoverageCommand;
 use MyDev\AuditRoutes\Examples\Commands\PhpUnitDetailedCoverageCommand;
 use MyDev\AuditRoutes\Examples\Commands\ScopedBindingCommand;
-use MyDev\AuditRoutes\Examples\Commands\PhpUnitCoverageCommand;
 
 class AuditRoutesServiceProvider extends ServiceProvider
 {

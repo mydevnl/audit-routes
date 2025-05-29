@@ -75,7 +75,6 @@ class AuditedRouteCollection implements Iterator
         return $this;
     }
 
-
     /**
      * @param AuditedRoute $auditedRoute
      * @return self
@@ -110,7 +109,9 @@ class AuditedRouteCollection implements Iterator
     /**
      * @param string $field
      * @param string $value
+     *
      * @throws UnexpectedValueException
+     *
      * @return self
      */
     public function where(string $field, string $value): self

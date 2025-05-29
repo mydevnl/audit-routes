@@ -21,7 +21,8 @@ class TotalAroundBenchmark implements AggregatorInterface
      * @param null | float $fractionAbove
      * @return void
      */
-    public function __construct(?string $name, protected ?float $fractionAbove, protected ?float $fractionBelow) {
+    public function __construct(?string $name, protected ?float $fractionAbove, protected ?float $fractionBelow)
+    {
         $this->setName($name);
     }
 
@@ -34,7 +35,6 @@ class TotalAroundBenchmark implements AggregatorInterface
         if ($this->fractionAbove && $auditedRoute->getScore() < $auditedRoute->getBenchmark() * $this->fractionAbove) {
             return;
         }
-
 
         if ($this->fractionBelow && $auditedRoute->getScore() > $auditedRoute->getBenchmark() * $this->fractionBelow) {
             return;

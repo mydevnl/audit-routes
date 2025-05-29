@@ -27,7 +27,8 @@ class JsonExport implements ExportInterface
      * @param OutputStyle $output
      * @return void
      */
-    public function __construct(protected OutputStyle $output) {
+    public function __construct(protected OutputStyle $output)
+    {
         $this->filename = $this->defaultFilename;
     }
 

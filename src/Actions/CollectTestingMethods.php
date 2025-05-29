@@ -16,6 +16,7 @@ class CollectTestingMethods
 
     /**
      * @return array<int, TestingMethod>
+     *
      * @throws ReflectionException
      */
     public static function run(): array

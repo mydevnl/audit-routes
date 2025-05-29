@@ -25,7 +25,9 @@ class AuditRoutes
 
     /**
      * @param iterable<int | string, mixed> $routes
+     *
      * @throws InvalidArgumentException
+     *
      * @return void
      */
     public function __construct(iterable $routes)
@@ -46,7 +48,9 @@ class AuditRoutes
 
     /**
      * @param  array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
+     *
      * @throws InvalidArgumentException
+     *
      * @return AuditedRouteCollection
      */
     public function run(array $auditors): AuditedRouteCollection

@@ -12,7 +12,9 @@ class AuditorFactory
     /**
      * @param class-string<AuditorInterface> | int                    $key
      * @param class-string<AuditorInterface> | AuditorInterface | int $value
+     *
      * @throws InvalidArgumentException
+     *
      * @return AuditorInterface
      */
     public static function build(string | int $key, string | AuditorInterface | int $value): AuditorInterface

@@ -23,6 +23,7 @@ trait AssertsRouteMiddleware
      * @param null | string | Closure(AuditedRouteCollection): string $message
      * @param null | Closure(RouteInterface): bool $when
      * @return static
+     *
      * @throws ReflectionException
      */
     protected function assertRoutesHaveMiddleware(

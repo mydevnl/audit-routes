@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Entities;
 
+use InvalidArgumentException;
 use JsonSerializable;
 use MyDev\AuditRoutes\Auditors\AuditorFactory;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
@@ -40,7 +41,9 @@ class AuditedRoute implements Stringable, JsonSerializable
 
     /**
      * @param array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
      * @return self
      */
     public function audit(array $auditors): self
@@ -77,7 +80,7 @@ class AuditedRoute implements Stringable, JsonSerializable
 
         $uri = $this->route->getUri();
 
-        if (substr($uri, 0, 1) !== '/') {
+        if (!str_starts_with($uri, '/')) {
             $uri = '/' . $uri;
         }
 

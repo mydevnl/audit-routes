@@ -37,6 +37,7 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
 
     /**
      * @return void
+     *
      * @throws ReflectionException
      */
     public function __construct()
@@ -64,6 +65,7 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
     /**
      * @param null | array<int | string, mixed> $arguments
      * @return self
+     *
      * @throws ReflectionException
      */
     public function setArguments(?array $arguments): self

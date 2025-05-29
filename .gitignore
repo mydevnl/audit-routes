@@ -7,4 +7,5 @@ composer.lock
 /.idea
 /.vscode
 /.report
+/.cache
 .DS_Store

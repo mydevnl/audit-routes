@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Entities;
 
+use Closure;
 use MyDev\AuditRoutes\Visitors\CallbackVisitor;
 use PhpParser\Node;
 use PhpParser\NodeAbstract;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
-use Closure;
 use ReflectionException;
 use ReflectionFunction;
 
@@ -42,6 +42,7 @@ class NodeAccessor
     /**
      * @param class-string | Closure(Node): bool $filter
      * @return bool
+     *
      * @throws ReflectionException
      */
     public function has(string | Closure $filter): bool
@@ -52,6 +53,7 @@ class NodeAccessor
     /**
      * @param class-string | Closure(Node): bool $filter
      * @return null | self
+     *
      * @throws ReflectionException
      */
     public function find(string | Closure $filter): ?self
@@ -65,11 +67,12 @@ class NodeAccessor
      * @param class-string | Closure(Node): bool $filter
      * @param null | int $returnValue
      * @return array<int, self>
+     *
      * @throws ReflectionException
      */
     public function filter(
         string | Closure $filter,
-        ?int $returnValue = NodeVisitor::DONT_TRAVERSE_CHILDREN
+        ?int $returnValue = NodeVisitor::DONT_TRAVERSE_CHILDREN,
     ): array {
         $this->filterResults = [];
 
@@ -100,11 +103,12 @@ class NodeAccessor
      * @param Closure(Node): mixed $callback
      * @param null | int $returnValue
      * @return void
+     *
      * @throws ReflectionException
      */
     public function each(
         Closure $callback,
-        ?int $returnValue = NodeVisitor::DONT_TRAVERSE_CHILDREN
+        ?int $returnValue = NodeVisitor::DONT_TRAVERSE_CHILDREN,
     ): void {
         [$firstParameter] = (new ReflectionFunction($callback))->getParameters();
         $requiredInstance = strval($firstParameter->getType());
