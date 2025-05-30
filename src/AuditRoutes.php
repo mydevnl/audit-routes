@@ -6,6 +6,7 @@ namespace MyDev\AuditRoutes;
 
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
+use MyDev\AuditRoutes\Auditors\AuditorFactory;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
@@ -56,13 +57,15 @@ class AuditRoutes
     public function run(array $auditors): AuditedRouteCollection
     {
         $collection = new AuditedRouteCollection();
+        $initialisedAuditors = AuditorFactory::buildMany($auditors);
 
         foreach ($this->routes as $route) {
             if (!$this->validateRoute($route)) {
                 continue;
             }
 
-            $collection->push(AuditedRoute::for($route, $this->benchmark)->audit($auditors));
+            $auditedRoute = AuditedRoute::for($route, $this->benchmark)->audit($initialisedAuditors);
+            $collection->push($auditedRoute);
         }
 
         return $collection;

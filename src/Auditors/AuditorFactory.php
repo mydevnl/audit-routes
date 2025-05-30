@@ -33,4 +33,22 @@ class AuditorFactory
 
         throw new InvalidArgumentException('Could not instantiate AuditorInterface');
     }
+
+    /**
+     * @param  array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return array<int, AuditorInterface>
+     */
+    public static function buildMany(array $auditors): array
+    {
+        $initialisedAuditors = [];
+
+        foreach ($auditors as $key => $value) {
+            $initialisedAuditors[] = self::build($key, $value);
+        }
+
+        return $initialisedAuditors;
+    }
 }

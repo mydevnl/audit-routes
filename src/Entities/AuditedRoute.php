@@ -6,7 +6,6 @@ namespace MyDev\AuditRoutes\Entities;
 
 use InvalidArgumentException;
 use JsonSerializable;
-use MyDev\AuditRoutes\Auditors\AuditorFactory;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Enums\AuditStatus;
@@ -40,7 +39,7 @@ class AuditedRoute implements Stringable, JsonSerializable
     }
 
     /**
-     * @param array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
+     * @param array<int, AuditorInterface> $auditors
      *
      * @throws InvalidArgumentException
      *
@@ -50,8 +49,7 @@ class AuditedRoute implements Stringable, JsonSerializable
     {
         $this->score = 0;
 
-        foreach ($auditors as $key => $value) {
-            $auditor = AuditorFactory::build($key, $value);
+        foreach ($auditors as $auditor) {
             $result = $auditor->run($this->route);
 
             if (is_null($result)) {

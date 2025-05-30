@@ -32,7 +32,6 @@ class PhpUnitCoverageCommand extends Command
 
     /**
      * @return int
-     * @throws \ReflectionException
      */
     public function handle(): int
     {
@@ -40,7 +39,7 @@ class PhpUnitCoverageCommand extends Command
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
             ->setBenchmark((int) $this->option('benchmark'))
-            ->run([PhpUnitAuditor::make()]);
+            ->run([PhpUnitAuditor::class]);
 
         return $output->generate($result)->value;
     }
