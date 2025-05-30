@@ -21,7 +21,7 @@ jobs:
         with:
           php-version: "8.1"
 
-      - name: Validate composer
+      - name: Validate composer packages
         run: composer validate
 
   validate-php:
@@ -30,15 +30,12 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
-          coverage: none
+          php-version: "8.1"
 
-      - name: Install composer dependencies
-        uses: ramsey/composer-install@v3
+      - name: Install composer packages
+        run: composer install
 
       - name: Run linters
         run: ./linter.sh
@@ -53,16 +50,12 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          coverage: pcov
-
-      - name: Make composer.lock readable
-        run: cp composer.lock ../composer.lock
 
       - name: Run security checker
-        uses: symfonycorp/security-checker-action@v5
+        run: composer audit
 
-  tests-coverage:
-    name: Tests coverage
+  test-coverage:
+    name: Test coverage
     runs-on: ubuntu-latest
     needs: [ validate-composer, validate-php ]
 
@@ -72,8 +65,8 @@ jobs:
         with:
           php-version: "8.1"
 
-      - name: Install composer dependencies
-        uses: ramsey/composer-install@v3
+      - name: Install composer packages
+        run: composer install
 
       - name: Run test coverage
         run: composer test-coverage

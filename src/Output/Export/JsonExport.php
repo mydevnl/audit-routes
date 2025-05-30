@@ -10,6 +10,7 @@ use MyDev\AuditRoutes\Contracts\ExportInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Entities\ExportResult;
 use MyDev\AuditRoutes\Enums\ExitCode;
+use MyDev\AuditRoutes\Utilities\Cast;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class JsonExport implements ExportInterface
@@ -38,7 +39,7 @@ class JsonExport implements ExportInterface
      */
     public function generate(AuditedRouteCollection $auditedRoutes): ExitCode
     {
-        $path = Config::string('audit-routes.output.directory');
+        $path = Cast::string(Config::get('audit-routes.output.directory'));
         $fullPath = $path . DIRECTORY_SEPARATOR . $this->filename;
 
         if (!is_dir($path)) {

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Contracts\RouteOccurrenceTrackerInterface;
 use MyDev\AuditRoutes\Contracts\VariableTrackerInterface;
 use MyDev\AuditRoutes\Entities\NodeAccessor;
+use MyDev\AuditRoutes\Utilities\Cast;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -30,11 +31,10 @@ class PhpUnitMethodVisitor extends NodeVisitorAbstract
      */
     public function enterNode(Node $node): ?int
     {
+        $actingMethods = Cast::array(Config::get('audit-routes.tests.acting-methods', []));
+
         $actingMethod = (new NodeAccessor($node))
-            ->find(fn (MethodCall $node): bool => in_array(
-                strval($node->name),
-                Config::array('audit-routes.tests.acting-methods'),
-            ));
+            ->find(fn (MethodCall $node): bool => in_array(strval($node->name), $actingMethods));
 
         if (is_null($actingMethod)) {
             return NodeVisitor::DONT_TRAVERSE_CHILDREN;

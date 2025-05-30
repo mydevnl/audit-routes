@@ -16,6 +16,7 @@ use MyDev\AuditRoutes\Entities\TestingMethod;
 use MyDev\AuditRoutes\Traits\Auditable;
 use MyDev\AuditRoutes\Traits\TracksRouteOccurrences;
 use MyDev\AuditRoutes\Traits\TracksVariables;
+use MyDev\AuditRoutes\Utilities\Cast;
 use MyDev\AuditRoutes\Visitors\PhpUnitMethodVisitor;
 use PhpParser\Node\Stmt\ClassMethod;
 use ReflectionException;
@@ -43,7 +44,8 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
      */
     public function __construct()
     {
-        $this->testingMethods = CollectTestingMethods::run(Config::string('audit-routes.tests.directory'));
+        $directory = Cast::string(Config::get('audit-routes.tests.directory'));
+        $this->testingMethods = CollectTestingMethods::run($directory);
     }
 
     /**

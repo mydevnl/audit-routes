@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use MyDev\AuditRoutes\Utilities\Cast;
 
 class AuditReportCommand extends Command
 {
@@ -54,19 +55,16 @@ class AuditReportCommand extends Command
      */
     protected function createIndex(): void
     {
-        $path = Config::string('audit-routes.output.directory');
+        $template = Cast::string(Config::get('audit-routes.output.html-index-template'));
+
+        if (empty($template)) {
+            throw new Exception('Html output template has not been configured.');
+        }
+
+        $path = Cast::string(Config::get('audit-routes.output.directory'));
 
         if (!is_dir($path)) {
             mkdir($path, recursive: true);
-        }
-
-        $fullPath = $path . DIRECTORY_SEPARATOR . 'index.html';
-
-        /** @var ?string $template */
-        $template = Config::get('audit-routes.output.html-index-template');
-
-        if (is_null($template)) {
-            throw new Exception('Html output template has not been configured.');
         }
 
         $reports = [];
@@ -77,6 +75,7 @@ class AuditReportCommand extends Command
             $reports[$name] = $filename;
         }
 
+        $fullPath = $path . DIRECTORY_SEPARATOR . 'index.html';
         file_put_contents($fullPath, View::make($template, ['reports' => $reports])->render());
     }
 }

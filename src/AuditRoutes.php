@@ -13,6 +13,7 @@ use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Routes\RouteFactory;
 use MyDev\AuditRoutes\Traits\IgnoresRoutes;
+use MyDev\AuditRoutes\Utilities\Cast;
 
 class AuditRoutes
 {
@@ -34,8 +35,12 @@ class AuditRoutes
     public function __construct(iterable $routes)
     {
         $this->routes = RouteFactory::collection($routes);
-        $this->benchmark = Config::integer('audit-routes.benchmark', 0);
-        $this->defaultIgnoredRoutes = Config::array('audit-routes.ignored-routes', []);
+
+        $this->benchmark = Cast::int(Config::get('audit-routes.benchmark'));
+
+        /** @var array<int, string> $ignoredRoutes */
+        $ignoredRoutes = Cast::array(Config::get('audit-routes.ignored-routes'));
+        $this->defaultIgnoredRoutes = $ignoredRoutes;
     }
 
     /**

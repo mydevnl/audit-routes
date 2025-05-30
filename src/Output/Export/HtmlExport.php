@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
+use MyDev\AuditRoutes\Utilities\Cast;
 
 class HtmlExport extends JsonExport
 {
@@ -23,10 +24,9 @@ class HtmlExport extends JsonExport
      */
     protected function getOutput(AuditedRouteCollection $auditedRoutes): string
     {
-        /** @var ?string $template */
-        $template = Config::get('audit-routes.output.html-report-template');
+        $template = Cast::string(Config::get('audit-routes.output.html-report-template'));
 
-        if (is_null($template)) {
+        if (empty($template)) {
             throw new Exception('Html output template has not been configured.');
         }
 

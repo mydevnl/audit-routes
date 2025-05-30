@@ -6,6 +6,7 @@ namespace MyDev\AuditRoutes\Actions;
 
 use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Entities\TestingMethod;
+use MyDev\AuditRoutes\Utilities\Cast;
 use MyDev\AuditRoutes\Utilities\ClassDiscovery;
 use ReflectionException;
 
@@ -25,10 +26,8 @@ class CollectTestingMethods
             return self::$testingMethods[$directory];
         }
 
-        $testClasses = ClassDiscovery::subclassesOf(
-            Config::string('audit-routes.tests.implementation'),
-            $directory,
-        );
+        $testImplementation = Cast::string(Config::get('audit-routes.tests.implementation'));
+        $testClasses = ClassDiscovery::subclassesOf($testImplementation, $directory);
 
         self::$testingMethods[$directory] = [];
 
