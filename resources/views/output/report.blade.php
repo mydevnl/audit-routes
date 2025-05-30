@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head></head>
+<head>
     <title>Audit Routes report</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         body {
+            --color-text: rgb(0, 0, 0);
             --color-card: rgb(255, 255, 255);
             --color-error: rgb(133, 9, 9);
             --color-primary: rgb(43, 2, 110);
@@ -17,6 +18,7 @@
             background-color: rgb(255, 255, 255);
             font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             margin: 0;
+            color: var(--color-text);
         }
 
         * {

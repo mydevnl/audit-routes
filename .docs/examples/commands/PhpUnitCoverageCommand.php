@@ -19,7 +19,7 @@ use MyDev\AuditRoutes\Output\OutputFactory;
 class PhpUnitCoverageCommand extends Command
 {
     protected $signature = 'route:audit-php-unit-coverage {--benchmark=1} {--export=} {--filename=}';
-    protected $description = 'Run Test Coverage auditing for Laravel routes';
+    protected $description = 'PhpUnit coverage auditing for Laravel routes';
 
     /**
      * @param Router $router

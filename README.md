@@ -56,14 +56,33 @@ To help you get started, default commands have been included to demonstrate how 
 
 Check out the `.docs/examples` directory.
 
-### Advanced Reporting
+### 📦 Output options
 
-An opinionated setup leveraging multiple auditors for comprehensive analysis.
+The route auditor supports multiple output formats to suit different use cases:
 
-Supports verbose output, HTML and JSON exports, and customizable benchmarks.
+- **Verbose Console Output** – Detailed audit results printed directly to the terminal.
+- **HTML Export** – Generate styled, shareable audit reports.
+- **JSON Export** – Easily consume audit data in tools or scripts.
+- **Custom Benchmarks** – Define and include application-specific metrics.
+
+You can also extend the system using **data aggregators**, which let you plug in custom logic to enrich reports with detailed, context-aware insights.
+
 
 ```bash
 php artisan route:audit -vv --benchmark 500 --export html --filename report.html
+```
+
+### 📊 Data Exports & Insights
+
+Audit reports are built and exported as HTML by combining multiple HTML exports, each responsible for analyzing a specific aspect of your application's routes.
+
+A **default report** is included, offering an opinionated configuration that serves as both a sensible starting point and a practical example of how commands can be orchestrated together.
+
+You’re free to modify, extend, or build entirely custom reports tailored to your needs—giving you full control over what gets audited and how results are presented.
+
+
+```bash
+php artisan route:audit-report
 ```
 
 ### Test Coverage
