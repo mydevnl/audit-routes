@@ -6,23 +6,25 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update-changelog:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout main branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           ref: main
 
       - name: Create and checkout changelog branch
         run: |
           git fetch origin changelog || true
-          if git show-ref --verify --quiet refs/heads/changelog; then
+          if git show-ref --quiet refs/remotes/origin/changelog; then
             git checkout changelog
-            git pull
+            git pull origin changelog
           else
             git checkout -b changelog
             git push -u origin changelog
@@ -37,16 +39,16 @@ jobs:
       - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: changelog
           commit_message: Update CHANGELOG
           file_pattern: CHANGELOG.md
+          push_options: --force-with-lease
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update CHANGELOG
           branch: changelog
           base: main
           title: "Update CHANGELOG.md"
           body: "Automated changelog update after release."
+          delete-branch: false
