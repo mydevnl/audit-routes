@@ -20,7 +20,9 @@ class OutputFactory
      * @param OutputStyle $output
      * @return void
      */
-    public function __construct(protected OutputStyle $output) {}
+    public function __construct(protected OutputStyle $output)
+    {
+    }
 
     /**
      * @param OutputStyle $output
@@ -41,10 +43,10 @@ class OutputFactory
         }
 
         $channels = match ($verbosity) {
-            32       => [ConsoleResult::class],
-            64       => [ConsoleTable::class],
+            32 => [ConsoleResult::class],
+            64 => [ConsoleTable::class],
             128, 256 => [ConsoleTable::class, ConsoleResult::class],
-            default  => [ConsoleExitCode::class],
+            default => [ConsoleExitCode::class],
         };
 
         if ($this->exporter) {

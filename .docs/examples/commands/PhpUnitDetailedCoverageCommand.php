@@ -24,7 +24,7 @@ use ReflectionException;
 class PhpUnitDetailedCoverageCommand extends Command
 {
     protected $signature = 'route:audit-php-unit-detailed-coverage {--benchmark=1} {--export=} {--filename=}';
-    protected $description = 'Run PHPUnit auditing for Laravel routes';
+    protected $description = 'PhpUnit detailed coverage auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -55,8 +55,6 @@ class PhpUnitDetailedCoverageCommand extends Command
             ])->setName("PHPUnit coverage for acting as '{$role}'"),
             ['user', 'admin'],
         );
-
-        $auditors[] = PhpUnitAuditor::make()->setName('PHPUnit coverage');
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
             ->setBenchmark((int) $this->option('benchmark'))

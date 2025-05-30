@@ -29,7 +29,8 @@ return [
         ],
     ],
     'output' => [
-        'directory'     => 'storage/exports/audit-routes',
-        'html-template' => 'audit-routes::output.report',
+        'directory'            => 'storage/exports/audit-routes',
+        'html-index-template'  => 'audit-routes::output.index',
+        'html-report-template' => 'audit-routes::output.report',
     ],
 ];

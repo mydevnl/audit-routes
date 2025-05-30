@@ -2,10 +2,11 @@
 
 This PHP Package provides a streamlined approach to gaining insights into the security and protection of your application's routes. In just a few seconds, you can assess critical aspects such as:
 
-- **Test Coverage**: Ensure all of your routes have test coverage
-- **Authentication**: Check which routes require authentication
-- **Permissions**: Verify that permission or policy checks are in place
-- **Middleware**: Confirm that the necessary middleware is applied
+- **Test Coverage:** Comprehensive tests cover all routes to ensure reliability
+- **Authentication:** Routes requiring authentication are clearly identified
+- **Scoped Bindings:** Nested route models are scoped to maintain data integrity
+- **Permissions:** Permission or policy checks enforce access control
+- **Middleware:** Essential middleware is applied for security and request handling
 
 Audit Routes is your new best friend for keeping your application rock-solid! Spotting potential flaws is now quicker and easier than ever.
 
@@ -16,7 +17,7 @@ Audit Routes is your new best friend for keeping your application rock-solid! Sp
 
 ## Laravel and more supported frameworks
 
-This package is built for Laravel, with upcoming support for Symfony, and is designed to be extendable for use with other PHP frameworks, allowing you to leverage its powerful features across a variety of frameworks.
+This package is built for Laravel and is designed to be extendable for use with other PHP frameworks, allowing you to leverage its powerful features across a variety of frameworks.
 
 ## Installation
 
@@ -40,15 +41,11 @@ Once installed, setting up custom commands is a breeze. The package provides fle
 AuditRoutes::for($this->router->getRoutes()->getRoutes())
     ->setBenchmark(1000)
     ->run([
-        PolicyAuditor::class => 100,
-        PermissionAuditor::class => -100,
-        TestAuditor::make()
-            ->setLimit(2333)
-            ->setPenalty(-10000)
-            ->setWeight(250),
-        MiddlewareAuditor::make(['auth'])
-            ->ignoreRoutes(['login', 'password*', 'api.*'])
-            ->setPenalty(-1000)
+        PolicyAuditor::class => 10,
+        PermissionAuditor::class => -10,
+        PhpUnitAuditor::make()
+            ->setLimit(100)
+            ->setPenalty(-100)
             ->setWeight(10),
     ]);
 ```
@@ -59,14 +56,33 @@ To help you get started, default commands have been included to demonstrate how 
 
 Check out the `.docs/examples` directory.
 
-### Advanced Reporting
+### 📦 Output options
 
-An opinionated setup leveraging multiple auditors for comprehensive analysis.
+The route auditor supports multiple output formats to suit different use cases:
 
-Supports verbose output, HTML and JSON exports, and customizable benchmarks.
+- **Verbose Console Output** – Detailed audit results printed directly to the terminal.
+- **HTML Export** – Generate styled, shareable audit reports.
+- **JSON Export** – Easily consume audit data in tools or scripts.
+- **Custom Benchmarks** – Define and include application-specific metrics.
+
+You can also extend the system using **data aggregators**, which let you plug in custom logic to enrich reports with detailed, context-aware insights.
+
 
 ```bash
 php artisan route:audit -vv --benchmark 500 --export html --filename report.html
+```
+
+### 📊 Data Exports & Insights
+
+Audit reports are built and exported as HTML by combining multiple HTML exports, each responsible for analyzing a specific aspect of your application's routes.
+
+A **default report** is included, offering an opinionated configuration that serves as both a sensible starting point and a practical example of how commands can be orchestrated together.
+
+You’re free to modify, extend, or build entirely custom reports tailored to your needs—giving you full control over what gets audited and how results are presented.
+
+
+```bash
+php artisan route:audit-report
 ```
 
 ### Test Coverage

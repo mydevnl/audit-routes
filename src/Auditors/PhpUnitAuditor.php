@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Auditors;
 
 use Closure;
+use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use MyDev\AuditRoutes\Actions\CollectTestingMethods;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
@@ -37,11 +38,12 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
 
     /**
      * @return void
+     *
      * @throws ReflectionException
      */
     public function __construct()
     {
-        $this->testingMethods = CollectTestingMethods::run();
+        $this->testingMethods = CollectTestingMethods::run(Config::string('audit-routes.tests.directory'));
     }
 
     /**
@@ -64,6 +66,7 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
     /**
      * @param null | array<int | string, mixed> $arguments
      * @return self
+     *
      * @throws ReflectionException
      */
     public function setArguments(?array $arguments): self

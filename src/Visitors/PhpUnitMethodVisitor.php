@@ -25,6 +25,7 @@ class PhpUnitMethodVisitor extends NodeVisitorAbstract
     /**
      * @param ClassMethod $node
      * @return int | null
+     *
      * @throws ReflectionException
      */
     public function enterNode(Node $node): ?int

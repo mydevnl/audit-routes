@@ -19,7 +19,7 @@ use MyDev\AuditRoutes\Output\OutputFactory;
 class PhpUnitCoverageCommand extends Command
 {
     protected $signature = 'route:audit-php-unit-coverage {--benchmark=1} {--export=} {--filename=}';
-    protected $description = 'Run Test Coverage auditing for Laravel routes';
+    protected $description = 'PhpUnit coverage auditing for Laravel routes';
 
     /**
      * @param Router $router
@@ -32,7 +32,6 @@ class PhpUnitCoverageCommand extends Command
 
     /**
      * @return int
-     * @throws \ReflectionException
      */
     public function handle(): int
     {
@@ -40,7 +39,7 @@ class PhpUnitCoverageCommand extends Command
 
         $result = AuditRoutes::for($this->router->getRoutes()->getRoutes())
             ->setBenchmark((int) $this->option('benchmark'))
-            ->run([PhpUnitAuditor::make()]);
+            ->run([PhpUnitAuditor::class]);
 
         return $output->generate($result)->value;
     }

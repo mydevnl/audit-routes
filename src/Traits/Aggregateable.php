@@ -22,12 +22,14 @@ trait Aggregateable
     }
 
     /** @return void */
-    public function after(): void {}
+    public function after(): void
+    {
+    }
 
     /** @return string */
     public function getAggregator(): string
     {
-        $classParts = explode('\\', get_class($this));
+        $classParts = explode('\\', $this::class);
 
         $snakeCase = (string) preg_replace_callback(
             '/[A-Z]/',

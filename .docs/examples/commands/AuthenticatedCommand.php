@@ -19,7 +19,7 @@ use MyDev\AuditRoutes\Output\OutputFactory;
 class AuthenticatedCommand extends Command
 {
     protected $signature = 'route:audit-auth {--export=} {--filename=}';
-    protected $description = 'Run Authentication Middleware auditing for Laravel routes';
+    protected $description = 'Authentication middleware auditing for Laravel routes';
 
     /**
      * @param Router $router

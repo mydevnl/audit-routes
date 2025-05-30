@@ -21,7 +21,8 @@ class TotalBetweenScores implements AggregatorInterface
      * @param int $till
      * @return void
      */
-    public function __construct(?string $name, protected int $from, protected int $till) {
+    public function __construct(?string $name, protected int $from, protected int $till)
+    {
         $this->setName($name);
     }
 
