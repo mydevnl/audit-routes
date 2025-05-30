@@ -29,6 +29,7 @@ trait Auditable
     /**
      * @param null | array<int | string, mixed> $arguments
      * @return AuditorInterface
+     *
      * @throws ReflectionException
      */
     public static function make(?array $arguments = null): AuditorInterface
@@ -116,7 +117,11 @@ trait Auditable
             }
 
             $parameter = ($method->getParameters()[0] ?? null)?->getType();
-            if (!$parameter || !method_exists($parameter, 'getName') || $parameter->getName() !== RouteInterface::class) {
+            if (
+                !$parameter
+                || !method_exists($parameter, 'getName')
+                || $parameter->getName() !== RouteInterface::class
+            ) {
                 continue;
             }
 
@@ -132,7 +137,7 @@ trait Auditable
     public function toArray(): array
     {
         return [
-            'name'    => $this->getName() ?? get_class($this),
+            'name'    => $this->getName() ?? $this::class,
             'weight'  => $this->weight,
             'penalty' => $this->penalty,
             'limit'   => $this->limit === PHP_INT_MAX ? null : $this->limit,

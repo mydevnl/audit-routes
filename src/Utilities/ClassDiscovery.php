@@ -14,13 +14,14 @@ class ClassDiscovery
      * @param string|ReflectionClass<object> $class
      * @param string $directory
      * @return array<int, class-string>
+     *
      * @throws ReflectionException
      */
     public static function subclassesOf(string|ReflectionClass $class, string $directory = ''): array
     {
         return self::find(
             $directory,
-            fn (ReflectionClass $reflectionClass): bool => $reflectionClass->isSubclassOf($class)
+            fn (ReflectionClass $reflectionClass): bool => $reflectionClass->isSubclassOf($class),
         );
     }
 
@@ -28,19 +29,21 @@ class ClassDiscovery
      * @param string|ReflectionClass<object> $class
      * @param string $directory
      * @return array<int, string>
+     *
      * @throws ReflectionException
      */
     public static function implemenationsOf(string|ReflectionClass $class, string $directory = ''): array
     {
         return self::find(
             $directory,
-            fn (ReflectionClass $reflectionClass): bool => $reflectionClass->implementsInterface($class)
+            fn (ReflectionClass $reflectionClass): bool => $reflectionClass->implementsInterface($class),
         );
     }
 
     /**
      * @param class-string|object $class
      * @return string
+     *
      * @throws ReflectionException
      */
     public static function source(string|object $class): string
@@ -52,6 +55,7 @@ class ClassDiscovery
      * @param string $directory
      * @param Closure(ReflectionClass<object>): bool $callback
      * @return array<int, class-string>
+     *
      * @throws ReflectionException
      */
     protected static function find(string $directory, Closure $callback): array
@@ -79,7 +83,7 @@ class ClassDiscovery
         $relativePath = str_replace((string) getcwd(), '', $filePath);
         $partialNames = array_map(
             fn (string $directory): string => ucfirst($directory),
-            explode(DIRECTORY_SEPARATOR, $relativePath)
+            explode(DIRECTORY_SEPARATOR, $relativePath),
         );
 
         /** @var class-string $psr4Namespace */

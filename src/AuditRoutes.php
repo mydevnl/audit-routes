@@ -6,12 +6,14 @@ namespace MyDev\AuditRoutes;
 
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
+use MyDev\AuditRoutes\Auditors\AuditorFactory;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Routes\RouteFactory;
 use MyDev\AuditRoutes\Traits\IgnoresRoutes;
+use MyDev\AuditRoutes\Utilities\Cast;
 
 class AuditRoutes
 {
@@ -25,14 +27,20 @@ class AuditRoutes
 
     /**
      * @param iterable<int | string, mixed> $routes
+     *
      * @throws InvalidArgumentException
+     *
      * @return void
      */
     public function __construct(iterable $routes)
     {
         $this->routes = RouteFactory::collection($routes);
-        $this->benchmark = Config::integer('audit-routes.benchmark', 0);
-        $this->defaultIgnoredRoutes = Config::array('audit-routes.ignored-routes', []);
+
+        $this->benchmark = Cast::int(Config::get('audit-routes.benchmark'));
+
+        /** @var array<int, string> $ignoredRoutes */
+        $ignoredRoutes = Cast::array(Config::get('audit-routes.ignored-routes'));
+        $this->defaultIgnoredRoutes = $ignoredRoutes;
     }
 
     /**
@@ -46,19 +54,23 @@ class AuditRoutes
 
     /**
      * @param  array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
+     *
      * @throws InvalidArgumentException
+     *
      * @return AuditedRouteCollection
      */
     public function run(array $auditors): AuditedRouteCollection
     {
         $collection = new AuditedRouteCollection();
+        $initialisedAuditors = AuditorFactory::buildMany($auditors);
 
         foreach ($this->routes as $route) {
             if (!$this->validateRoute($route)) {
                 continue;
             }
 
-            $collection->push(AuditedRoute::for($route, $this->benchmark)->audit($auditors));
+            $auditedRoute = AuditedRoute::for($route, $this->benchmark)->audit($initialisedAuditors);
+            $collection->push($auditedRoute);
         }
 
         return $collection;

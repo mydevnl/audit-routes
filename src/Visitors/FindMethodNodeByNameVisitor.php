@@ -13,7 +13,7 @@ use ReflectionException;
 
 class FindMethodNodeByNameVisitor extends NodeVisitorAbstract
 {
-    /** @var NodeAccessor|null  */
+    /** @var NodeAccessor|null */
     protected ?NodeAccessor $nodeAccessor = null;
 
     /**
@@ -27,6 +27,7 @@ class FindMethodNodeByNameVisitor extends NodeVisitorAbstract
     /**
      * @param Node $node
      * @return int|null
+     *
      * @throws ReflectionException
      */
     public function enterNode(Node $node): ?int

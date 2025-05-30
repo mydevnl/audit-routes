@@ -6,33 +6,38 @@ namespace MyDev\AuditRoutes\Actions;
 
 use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Entities\TestingMethod;
+use MyDev\AuditRoutes\Utilities\Cast;
 use MyDev\AuditRoutes\Utilities\ClassDiscovery;
 use ReflectionException;
 
 class CollectTestingMethods
 {
-    /** @var array<int, TestingMethod> $testingMethods */
+    /** @var array<string, array<int, TestingMethod>> $testingMethods */
     protected static array $testingMethods = [];
 
     /**
      * @return array<int, TestingMethod>
+     *
      * @throws ReflectionException
      */
-    public static function run(): array
+    public static function run(string $directory): array
     {
-        if (!empty(self::$testingMethods)) {
-            return self::$testingMethods;
+        if (isset(self::$testingMethods[$directory])) {
+            return self::$testingMethods[$directory];
         }
 
-        $testClasses = ClassDiscovery::subclassesOf(
-            Config::string('audit-routes.tests.implementation'),
-            Config::string('audit-routes.tests.directory'),
-        );
+        $testImplementation = Cast::string(Config::get('audit-routes.tests.implementation'));
+        $testClasses = ClassDiscovery::subclassesOf($testImplementation, $directory);
+
+        self::$testingMethods[$directory] = [];
 
         foreach ($testClasses as $testClass) {
-            array_push(self::$testingMethods, ...CollectTestingMethodsForClass::run($testClass));
+            array_push(
+                self::$testingMethods[$directory],
+                ...CollectTestingMethodsForClass::run($testClass),
+            );
         }
 
-        return self::$testingMethods;
+        return self::$testingMethods[$directory];
     }
 }

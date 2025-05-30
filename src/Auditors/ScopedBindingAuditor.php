@@ -30,7 +30,7 @@ class ScopedBindingAuditor implements AuditorInterface
             return $this->getScore(self::NOT_APPLICABLE);
         }
 
-        preg_match_all("/{(.*?)}/", $route->getUri(), $bindings);
+        preg_match_all('/{(.*?)}/', $route->getUri(), $bindings);
 
         if (count($bindings[0]) > 1) {
             return $this->getScore(self::FAIL);

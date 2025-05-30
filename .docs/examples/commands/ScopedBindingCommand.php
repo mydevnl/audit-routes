@@ -19,7 +19,7 @@ use MyDev\AuditRoutes\Output\OutputFactory;
 class ScopedBindingCommand extends Command
 {
     protected $signature = 'route:audit-scoped-bindings {--export=} {--filename=}';
-    protected $description = 'Run Scoped Binding Reporting auditing for Laravel routes';
+    protected $description = 'Scoped bindings auditing for Laravel routes';
 
     /**
      * @param Router $router

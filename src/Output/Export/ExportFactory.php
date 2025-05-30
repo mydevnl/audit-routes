@@ -14,7 +14,9 @@ class ExportFactory
      * @param OutputStyle $output
      * @return void
      */
-    public function __construct(protected OutputStyle $output) {}
+    public function __construct(protected OutputStyle $output)
+    {
+    }
 
     /**
      * @param OutputStyle $output
