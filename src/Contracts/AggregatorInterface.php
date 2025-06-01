@@ -32,4 +32,7 @@ interface AggregatorInterface extends JsonSerializable
 
     /** @return null | float | array<int | string, AggregatorInterface> */
     public function getResult(): null | float | array;
+
+    /** @return array<string, mixed> */
+    public function toArray(): array;
 }

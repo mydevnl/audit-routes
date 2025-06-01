@@ -17,11 +17,10 @@ class TotalBetweenScores implements AggregatorInterface
 
     /**
      * @param null | string $name
-     * @param int $from
-     * @param int $till
-     * @return void
+     * @param int|null $from
+     * @param int|null $till
      */
-    public function __construct(?string $name, protected int $from, protected int $till)
+    public function __construct(?string $name, protected ?int $from, protected ?int $till)
     {
         $this->setName($name);
     }
@@ -32,11 +31,11 @@ class TotalBetweenScores implements AggregatorInterface
      */
     public function visit(AuditedRoute $auditedRoute): void
     {
-        if ($auditedRoute->getScore() < $this->from) {
+        if (!is_null($this->from) && $auditedRoute->getScore() < $this->from) {
             return;
         }
 
-        if ($auditedRoute->getScore() > $this->till) {
+        if (!is_null($this->till) && $auditedRoute->getScore() > $this->till) {
             return;
         }
 

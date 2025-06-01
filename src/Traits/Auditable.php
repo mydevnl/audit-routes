@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
+use InvalidArgumentException;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionMethod;
 
 /** @mixin AuditorInterface */
@@ -30,7 +30,7 @@ trait Auditable
      * @param null | array<int | string, mixed> $arguments
      * @return AuditorInterface
      *
-     * @throws ReflectionException
+     * @throws InvalidArgumentException
      */
     public static function make(?array $arguments = null): AuditorInterface
     {
@@ -78,6 +78,12 @@ trait Auditable
         $this->weight = $weight;
 
         return $this;
+    }
+
+    /** @return int */
+    public function getWeight(): int
+    {
+        return $this->weight;
     }
 
     /**

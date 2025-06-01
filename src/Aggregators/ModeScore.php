@@ -15,11 +15,8 @@ class ModeScore implements AggregatorInterface
     /** @var array<int, int> $visitedScores */
     protected array $visitedScores = [];
 
-    /** @var int $visitedCount */
-    protected int $visitedCount = 0;
-
-    /** @var null | float $result */
-    protected ?float $result = null;
+    /** @var float $result */
+    protected float $result = 0;
 
     /**
      * @param null | string $name
@@ -41,14 +38,24 @@ class ModeScore implements AggregatorInterface
         }
 
         $this->visitedScores[$auditedRoute->getScore()]++;
-        $this->visitedCount++;
     }
 
     /** @return void */
     public function after(): void
     {
-        asort($this->visitedScores);
+        if (empty($this->visitedScores)) {
+            return;
+        }
 
-        $this->result = array_key_last($this->visitedScores);
+        ksort($this->visitedScores);
+        $modeOccurrences = max($this->visitedScores);
+
+        foreach ($this->visitedScores as $score => $occurrences) {
+            if ($occurrences === $modeOccurrences) {
+                $this->result = $score;
+
+                return;
+            }
+        }
     }
 }

@@ -51,6 +51,7 @@ class AuditReportCommand extends Command
     }
 
     /**
+     * @return void
      * @throws Exception
      */
     protected function createIndex(): void

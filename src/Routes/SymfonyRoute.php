@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyDev\AuditRoutes\Routes;
 
 use MyDev\AuditRoutes\Contracts\RouteInterface;
+use MyDev\AuditRoutes\Entities\Middleware;
 use Symfony\Component\Routing\Route;
 
 class SymfonyRoute implements RouteInterface
@@ -46,10 +47,25 @@ class SymfonyRoute implements RouteInterface
         return $this->getName() ?? $this->getUri();
     }
 
-    /** @return array<int, string | callable> */
+    /** @return array<int, Middleware> */
     public function getMiddlewares(): array
     {
         return [];
+    }
+
+    /**
+     * @param string $middleware
+     * @return bool
+     */
+    public function hasMiddleware(string $middleware): bool
+    {
+        foreach ($this->getMiddlewares() as $implementedMiddleware) {
+            if ($implementedMiddleware->is($middleware)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @return string */

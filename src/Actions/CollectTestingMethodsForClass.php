@@ -17,21 +17,29 @@ class CollectTestingMethodsForClass
 {
     /**
      * @param class-string $class
+     * @param null | string $source
      * @return array<int, TestingMethod>
-     *
-     * @throws ReflectionException
      */
-    public static function run(string $class): array
+    public static function run(string $class, ?string $source = null): array
     {
-        $parser = (new ParserFactory())->createForNewestSupportedVersion();
-        $parsedFile = $parser->parse(ClassDiscovery::source($class));
+        try {
+            if (is_null($source)) {
+                $source = ClassDiscovery::source($class);
+            }
 
-        if (!$parsedFile) {
+            $parser = (new ParserFactory())->createForNewestSupportedVersion();
+            $parsedSource = $parser->parse($source);
+
+            if (!$parsedSource) {
+                return [];
+            }
+
+            $testingMethods = [];
+            $reflectionClass = new ReflectionClass($class);
+        } catch (ReflectionException) {
             return [];
         }
 
-        $testingMethods = [];
-        $reflectionClass = new ReflectionClass($class);
         $coveredRoutes = CollectCoversRouteAttribute::run($reflectionClass);
 
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
@@ -43,7 +51,7 @@ class CollectTestingMethodsForClass
 
             $methodNodeVisitor = new FindMethodNodeByNameVisitor($method->getName());
 
-            (new NodeTraverser($methodNodeVisitor))->traverse($parsedFile);
+            (new NodeTraverser($methodNodeVisitor))->traverse($parsedSource);
 
             if (is_null($methodNodeVisitor->getNodeAccessor())) {
                 continue;

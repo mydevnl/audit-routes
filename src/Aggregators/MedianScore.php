@@ -18,8 +18,8 @@ class MedianScore implements AggregatorInterface
     /** @var int $visitedCount */
     protected int $visitedCount = 0;
 
-    /** @var null | float $result */
-    protected ?float $result = null;
+    /** @var float $result */
+    protected float $result = 0;
 
     /**
      * @param null | string $name
@@ -48,24 +48,24 @@ class MedianScore implements AggregatorInterface
     public function after(): void
     {
         ksort($this->visitedScores);
-        $this->result = $this->getMedian($this->visitedCount / 2);
-    }
 
-    protected function getMedian(float $target, ?int $previousScore = null): float
-    {
-        $score = array_key_first($this->visitedScores);
+        $leftMedian = null;
+        $leftIndex = (int) floor(($this->visitedCount - 1) / 2);
+        $rightIndex = (int) ceil(($this->visitedCount - 1) / 2);
 
-        if ($target <= 1) {
-            return (($previousScore ?? $score) + $score) / 2;
+        $cumulative = 0;
+        foreach ($this->visitedScores as $value => $count) {
+            $cumulative += $count;
+
+            if (is_null($leftMedian) && $cumulative > $leftIndex) {
+                $leftMedian = $value;
+            }
+
+            if ($cumulative > $rightIndex) {
+                $this->result = ($leftMedian + $value) / 2;
+
+                return;
+            }
         }
-
-        $target -= $this->visitedScores[$score];
-        unset($this->visitedScores[$score]);
-
-        if ($target <= 0) {
-            return floatval($score);
-        }
-
-        return $this->getMedian($target, $score);
     }
 }

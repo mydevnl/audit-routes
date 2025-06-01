@@ -7,6 +7,7 @@ namespace MyDev\AuditRoutes\Utilities;
 use Closure;
 use ReflectionClass;
 use ReflectionException;
+use RuntimeException;
 
 class ClassDiscovery
 {
@@ -14,8 +15,6 @@ class ClassDiscovery
      * @param string|ReflectionClass<object> $class
      * @param string $directory
      * @return array<int, class-string>
-     *
-     * @throws ReflectionException
      */
     public static function subclassesOf(string|ReflectionClass $class, string $directory = ''): array
     {
@@ -29,8 +28,6 @@ class ClassDiscovery
      * @param string|ReflectionClass<object> $class
      * @param string $directory
      * @return array<int, string>
-     *
-     * @throws ReflectionException
      */
     public static function implemenationsOf(string|ReflectionClass $class, string $directory = ''): array
     {
@@ -55,19 +52,23 @@ class ClassDiscovery
      * @param string $directory
      * @param Closure(ReflectionClass<object>): bool $callback
      * @return array<int, class-string>
-     *
-     * @throws ReflectionException
      */
     protected static function find(string $directory, Closure $callback): array
     {
-        $found = [];
-        $absolutePath = getcwd() . DIRECTORY_SEPARATOR . $directory;
+        if (!str_starts_with($directory, DIRECTORY_SEPARATOR)) {
+            $directory = getcwd() . DIRECTORY_SEPARATOR . $directory;
+        }
 
-        foreach (FileDiscovery::find($absolutePath, 'php') as $file) {
+        $found = [];
+        foreach (FileDiscovery::find($directory, 'php') as $file) {
             $namespacedClassName = self::toPSR4Namespace($file->getPathName());
 
-            if ($callback(new ReflectionClass($namespacedClassName))) {
-                $found[] = $namespacedClassName;
+            try {
+                if ($callback(new ReflectionClass($namespacedClassName))) {
+                    $found[] = $namespacedClassName;
+                }
+            } catch (ReflectionException) {
+                continue;
             }
         }
 
@@ -77,18 +78,45 @@ class ClassDiscovery
     /**
      * @param string $filePath
      * @return class-string
+     *
+     * @throws RuntimeException
      */
     protected static function toPsr4Namespace(string $filePath): string
     {
-        $relativePath = str_replace((string) getcwd(), '', $filePath);
-        $partialNames = array_map(
-            fn (string $directory): string => ucfirst($directory),
-            explode(DIRECTORY_SEPARATOR, $relativePath),
-        );
+        $absoluteFilePath = realpath($filePath);
+        if (!str_ends_with($filePath, '.php') || !is_string($absoluteFilePath)) {
+            throw new RuntimeException("File does not appear to be a resolvable PHP file: {$filePath}");
+        }
 
-        /** @var class-string $psr4Namespace */
-        $psr4Namespace = substr(implode('\\', $partialNames), 0, -4);
+        $autoload = [];
 
-        return $psr4Namespace;
+        /** @var array<string, mixed> $composer */
+        $composer = json_decode((string) file_get_contents('composer.json'), true);
+
+        foreach (['autoload', 'autoload-dev'] as $autoloader) {
+            if (isset($composer[$autoloader]) && is_array($composer[$autoloader])) {
+                $autoload = array_merge($autoload, Cast::array($composer[$autoloader]['psr-4']));
+            }
+        }
+
+        foreach ($autoload as $namespacePrefix => $baseDir) {
+            $absoluteBaseDir = realpath(Cast::string($baseDir));
+            if (!is_string($absoluteBaseDir)) {
+                continue;
+            }
+            if (!str_starts_with($absoluteFilePath, $absoluteBaseDir)) {
+                continue;
+            }
+
+            $relativePath = ltrim(substr($absoluteFilePath, strlen($absoluteBaseDir)), DIRECTORY_SEPARATOR);
+            $classPath = str_replace([DIRECTORY_SEPARATOR, '.php'], ['\\', ''], $relativePath);
+
+            /** @var class-string $psr4Namespace */
+            $psr4Namespace = rtrim((string) $namespacePrefix, '\\') . '\\' . $classPath;
+
+            return $psr4Namespace;
+        }
+
+        throw new RuntimeException("Could not determine PSR-4 namespace for {$filePath}");
     }
 }

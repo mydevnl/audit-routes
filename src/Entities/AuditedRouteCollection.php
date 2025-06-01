@@ -38,6 +38,12 @@ class AuditedRouteCollection implements Iterator
         return $this->items;
     }
 
+    /** @return null | AuditedRoute */
+    public function first(): ?AuditedRoute
+    {
+        return $this->items[0] ?? null;
+    }
+
     /** @return int */
     public function count(): int
     {
@@ -109,10 +115,9 @@ class AuditedRouteCollection implements Iterator
     /**
      * @param string $field
      * @param string $value
+     * @return self
      *
      * @throws UnexpectedValueException
-     *
-     * @return self
      */
     public function where(string $field, string $value): self
     {

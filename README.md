@@ -13,6 +13,8 @@ Audit Routes is your new best friend for keeping your application rock-solid! Sp
 
 [![Latest Stable Version](https://poser.pugx.org/mydevnl/audit-routes/v/stable)](https://packagist.org/packages/mydevnl/audit-routes)
 [![Total Downloads](https://poser.pugx.org/mydevnl/audit-routes/downloads)](https://packagist.org/packages/mydevnl/audit-routes)
+[![Coding standards](https://github.com/mydevnl/audit-routes/actions/workflows/coding-standards.yml/badge.svg)](https://github.com/mydevnl/audit-routes/actions/workflows/coding-standards.yml)
+[![Tests](https://github.com/mydevnl/audit-routes/actions/workflows/run-tests.yml/badge.svg)](https://github.com/mydevnl/audit-routes/actions/workflows/run-tests.yml)
 [![License](https://poser.pugx.org/mydevnl/audit-routes/license)](https://packagist.org/packages/mydevnl/audit-routes)
 
 ## Laravel and more supported frameworks
@@ -24,7 +26,7 @@ This package is built for Laravel and is designed to be extendable for use with 
 You can install the package via Composer:
 
 ```bash
-composer require mydevnl/audit-routes:dev-main --dev
+composer require mydevnl/audit-routes --dev
 ```
 
 Optionally publish the configuration file:
@@ -148,7 +150,7 @@ This package is open-sourced software licensed under the [MIT license](LICENSE.m
 
 ## We're still in development
 
-Please be aware that the latest release is experimental and may be unstable.
+Please be aware that the most stable release is an beta release and may be unstable.
 The roadmap will be published soon. Follow [mydevnl](https://github.com/mydevnl) to stay updated!
 
 May your routes be flawless! 🎉

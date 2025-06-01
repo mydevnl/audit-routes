@@ -6,8 +6,9 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
+use InvalidArgumentException;
 use MyDev\AuditRoutes\Aggregators\AverageScore;
-use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
+use MyDev\AuditRoutes\Aggregators\ConditionedCount;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\Group;
 use MyDev\AuditRoutes\Aggregators\HighestScore;
@@ -44,7 +45,8 @@ class AdvancedReportingCommand extends Command
 
     /**
      * @return int
-     * @throws \ReflectionException
+     *
+     * @throws InvalidArgumentException
      */
     public function handle(): int
     {
@@ -84,7 +86,7 @@ class AdvancedReportingCommand extends Command
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
-            new ConditionedCumulative('Total routes'),
+            new ConditionedCount('Total routes'),
             new SuccessPercentage('Success rate'),
             new FailedPercentage('Failed rate'),
             new LowestScore('Lowest'),

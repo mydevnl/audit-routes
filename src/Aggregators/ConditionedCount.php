@@ -9,7 +9,7 @@ use MyDev\AuditRoutes\Contracts\AggregatorInterface;
 use MyDev\AuditRoutes\Entities\AuditedRoute;
 use MyDev\AuditRoutes\Traits\Aggregateable;
 
-class ConditionedCumulative implements AggregatorInterface
+class ConditionedCount implements AggregatorInterface
 {
     use Aggregateable;
 
@@ -21,7 +21,7 @@ class ConditionedCumulative implements AggregatorInterface
      * @param null | Closure(AuditedRoute): bool $condition
      * @return void
      */
-    public function __construct(?string $name, protected ?Closure $condition = null)
+    public function __construct(?string $name = null, protected ?Closure $condition = null)
     {
         $this->setName($name);
     }

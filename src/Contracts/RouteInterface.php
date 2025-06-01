@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Contracts;
 
+use MyDev\AuditRoutes\Entities\Middleware;
+
 interface RouteInterface
 {
     /** @return null | string */
@@ -15,8 +17,14 @@ interface RouteInterface
     /** @return string */
     public function getIdentifier(): string;
 
-    /** @return array<int, string | callable> */
+    /** @return array<int, Middleware> */
     public function getMiddlewares(): array;
+
+    /**
+     * @param string $middleware
+     * @return bool
+     */
+    public function hasMiddleware(string $middleware): bool;
 
     /** @return string */
     public function getClass(): string;

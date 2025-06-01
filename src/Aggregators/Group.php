@@ -44,4 +44,17 @@ class Group implements AggregatorInterface
             $aggregator->after();
         }
     }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        return [
+            'aggregator' => $this->getAggregator(),
+            'name'       => $this->getName(),
+            'result'     => array_map(
+                fn (AggregatorInterface $childAggregator): array => $childAggregator->toArray(),
+                $this->result,
+            ),
+        ];
+    }
 }

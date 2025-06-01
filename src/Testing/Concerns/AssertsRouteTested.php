@@ -22,8 +22,6 @@ trait AssertsRouteTested
      * @param null | string | Closure(AuditedRouteCollection): string $message
      * @param null | Closure(RouteInterface): bool $when
      * @return static
-     *
-     * @throws \ReflectionException
      */
     protected function assertRoutesAreTested(
         iterable $routes,
@@ -50,8 +48,6 @@ trait AssertsRouteTested
      * @param int $times
      * @param null | string $message
      * @return static
-     *
-     * @throws \ReflectionException
      */
     protected function assertRouteIsTested(mixed $route, int $times = 1, ?string $message = null): static
     {

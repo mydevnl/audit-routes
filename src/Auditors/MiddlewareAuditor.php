@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Auditors;
 
+use InvalidArgumentException;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
+use MyDev\AuditRoutes\Entities\Middleware;
 use MyDev\AuditRoutes\Traits\Auditable;
 
 class MiddlewareAuditor implements AuditorInterface
 {
     use Auditable;
 
-    /** @var array<int | string, mixed> $middlewares */
+    /** @var array<int | string, string | Middleware> $middlewares */
     protected array $middlewares = [];
 
     /**
@@ -21,16 +23,12 @@ class MiddlewareAuditor implements AuditorInterface
      */
     public function handle(RouteInterface $route): int
     {
-        $implementedMiddlewares = $route->getMiddlewares();
-        $implementationCount = 0;
+        $implementedMiddlewares = array_filter(
+            $route->getMiddlewares(),
+            fn (Middleware $implementedMiddleware): bool => $implementedMiddleware->is(...$this->middlewares),
+        );
 
-        foreach ($this->middlewares as $middleware) {
-            if (in_array($middleware, $implementedMiddlewares)) {
-                $implementationCount++;
-            }
-        }
-
-        return $this->getScore($implementationCount);
+        return $this->getScore(count($implementedMiddlewares));
     }
 
     /**
@@ -39,7 +37,14 @@ class MiddlewareAuditor implements AuditorInterface
      */
     public function setArguments(?array $arguments): self
     {
-        $this->middlewares = $arguments ?? [];
+        $this->middlewares = [];
+
+        foreach ($arguments ?? [] as $argument) {
+            if (!is_string($argument) && !$argument instanceof Middleware) {
+                throw new InvalidArgumentException('Invalid argument provided');
+            }
+            $this->middlewares[] = $argument;
+        }
 
         return $this;
     }

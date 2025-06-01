@@ -11,6 +11,7 @@ use PhpParser\NodeAbstract;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
+use PhpParser\PrettyPrinter\Standard;
 use ReflectionException;
 use ReflectionFunction;
 
@@ -30,6 +31,27 @@ class NodeAccessor
         return $this->node;
     }
 
+    /** @return string */
+    public function getName(): string
+    {
+        $name = $this->node;
+        if (property_exists($this->node, 'name')) {
+            $name = $this->node->name;
+        }
+
+        if ($name instanceof Node\Expr) {
+            $printer = new Standard();
+
+            return $printer->prettyPrintExpr($name);
+        }
+
+        if (!is_string($name)) {
+            return strval($name);
+        }
+
+        return $name;
+    }
+
     /**
      * @param NodeVisitorAbstract ...$visitors
      * @return void
@@ -40,35 +62,42 @@ class NodeAccessor
     }
 
     /**
-     * @param class-string | Closure(Node): bool $filter
+     * @param class-string | Closure ...$filters
      * @return bool
-     *
-     * @throws ReflectionException
      */
-    public function has(string | Closure $filter): bool
+    public function has(string | Closure ...$filters): bool
     {
-        return boolval($this->find($filter));
+        return boolval($this->find(...$filters));
     }
 
     /**
-     * @param class-string | Closure(Node): bool $filter
+     * @param class-string | Closure ...$filters
      * @return null | self
-     *
-     * @throws ReflectionException
      */
-    public function find(string | Closure $filter): ?self
+    public function find(string | Closure ...$filters): ?self
     {
-        $result = $this->filter($filter, NodeVisitor::STOP_TRAVERSAL);
+        $nodes = $this->filter($filters[0]);
 
-        return $result[0] ?? null;
+        $filters = array_slice($filters, 1);
+
+        if (empty($filters)) {
+            return $nodes[0] ?? null;
+        }
+
+        foreach ($nodes as $node) {
+            $found = $node->find(...$filters);
+            if ($found) {
+                return $found;
+            }
+        }
+
+        return null;
     }
 
     /**
      * @param class-string | Closure(Node): bool $filter
      * @param null | int $returnValue
      * @return array<int, self>
-     *
-     * @throws ReflectionException
      */
     public function filter(
         string | Closure $filter,
@@ -78,13 +107,17 @@ class NodeAccessor
 
         $requiredInstance = $filter;
         if (is_callable($filter)) {
-            $parameters = (new ReflectionFunction($filter))->getParameters();
+            try {
+                $parameters = (new ReflectionFunction($filter))->getParameters();
+            } catch (ReflectionException) {
+                $parameters = [];
+            }
             $requiredInstance = empty($parameters) ? null : strval($parameters[0]->getType());
         }
 
         $this->traverse(new CallbackVisitor(
             function (NodeAbstract $node) use ($requiredInstance, $filter, $returnValue): ?int {
-                if (!$node instanceof $requiredInstance) {
+                if ($requiredInstance && !$node instanceof $requiredInstance) {
                     return null;
                 }
                 if (is_callable($filter) && !$filter($node)) {
@@ -103,19 +136,21 @@ class NodeAccessor
      * @param Closure(Node): mixed $callback
      * @param null | int $returnValue
      * @return void
-     *
-     * @throws ReflectionException
      */
     public function each(
         Closure $callback,
         ?int $returnValue = NodeVisitor::DONT_TRAVERSE_CHILDREN,
     ): void {
-        [$firstParameter] = (new ReflectionFunction($callback))->getParameters();
-        $requiredInstance = strval($firstParameter->getType());
+        try {
+            $parameters = (new ReflectionFunction($callback))->getParameters();
+        } catch (ReflectionException) {
+            $parameters = [];
+        }
+        $requiredInstance = empty($parameters) ? null : strval($parameters[0]->getType());
 
         $this->traverse(new CallbackVisitor(
             function (NodeAbstract $node) use ($callback, $requiredInstance, $returnValue): ?int {
-                if (!$node instanceof $requiredInstance) {
+                if ($requiredInstance && !$node instanceof $requiredInstance) {
                     return null;
                 }
 
