@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Contracts;
 
+use Closure;
 use JsonSerializable;
 
 interface AuditorInterface extends JsonSerializable
@@ -38,6 +39,9 @@ interface AuditorInterface extends JsonSerializable
      */
     public function setWeight(int $weight): static;
 
+    /** @return int */
+    public function getWeight(): int;
+
     /**
      * @param int $penalty
      * @return static
@@ -49,4 +53,22 @@ interface AuditorInterface extends JsonSerializable
      * @return static
      */
     public function setLimit(int $limit): static;
+
+    /** @param array<int, string> $routes */
+    public function ignoreRoutes(array $routes): self;
+
+    /**
+     * @param Closure(RouteInterface): bool $condition
+     * @return static
+     */
+    public function when(Closure $condition): static;
+
+    /**
+     * @param null | string $name
+     * @return static
+     */
+    public function setName(?string $name): static;
+
+    /** @return null | string */
+    public function getName(): ?string;
 }

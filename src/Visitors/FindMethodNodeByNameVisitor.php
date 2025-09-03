@@ -9,7 +9,6 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
-use ReflectionException;
 
 class FindMethodNodeByNameVisitor extends NodeVisitorAbstract
 {
@@ -27,8 +26,6 @@ class FindMethodNodeByNameVisitor extends NodeVisitorAbstract
     /**
      * @param Node $node
      * @return int|null
-     *
-     * @throws ReflectionException
      */
     public function enterNode(Node $node): ?int
     {

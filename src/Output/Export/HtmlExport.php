@@ -17,10 +17,9 @@ class HtmlExport extends JsonExport
 
     /**
      * @param AuditedRouteCollection $auditedRoutes
+     * @return string
      *
      * @throws Exception
-     *
-     * @return string
      */
     protected function getOutput(AuditedRouteCollection $auditedRoutes): string
     {

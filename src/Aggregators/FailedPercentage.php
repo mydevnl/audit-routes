@@ -42,4 +42,10 @@ class FailedPercentage implements AggregatorInterface
 
         $this->result = ($failedTotal + $addition) / $this->visitedCount * 100;
     }
+
+    /** @return float */
+    public function getResult(): float
+    {
+        return round($this->result, 2);
+    }
 }

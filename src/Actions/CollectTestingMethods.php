@@ -8,18 +8,13 @@ use Illuminate\Support\Facades\Config;
 use MyDev\AuditRoutes\Entities\TestingMethod;
 use MyDev\AuditRoutes\Utilities\Cast;
 use MyDev\AuditRoutes\Utilities\ClassDiscovery;
-use ReflectionException;
 
 class CollectTestingMethods
 {
     /** @var array<string, array<int, TestingMethod>> $testingMethods */
     protected static array $testingMethods = [];
 
-    /**
-     * @return array<int, TestingMethod>
-     *
-     * @throws ReflectionException
-     */
+    /** @return array<int, TestingMethod> */
     public static function run(string $directory): array
     {
         if (isset(self::$testingMethods[$directory])) {

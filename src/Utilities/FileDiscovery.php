@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Utilities;
 
-use Generator;
 use Iterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -20,8 +19,13 @@ class FileDiscovery
      */
     public static function find(string $path, ?string $extension = null): array
     {
+        $iterator = self::findFilesAsIterator($path, $extension);
+        if (is_null($iterator)) {
+            return [];
+        }
+
         /** @var array<int, SplFileInfo> $result */
-        $result = iterator_to_array(self::findFilesAsIterator($path, $extension));
+        $result = iterator_to_array($iterator);
 
         return $result;
     }
@@ -29,12 +33,12 @@ class FileDiscovery
     /**
      * @param string $path
      * @param null | string $extension
-     * @return Iterator
+     * @return null | Iterator
      */
-    protected static function findFilesAsIterator(string $path, ?string $extension = null): Iterator
+    protected static function findFilesAsIterator(string $path, ?string $extension = null): ?Iterator
     {
         if (!is_dir($path)) {
-            return new Generator();
+            return null;
         }
 
         $fileIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));

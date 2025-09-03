@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\AuditRoutes\Examples;
+namespace MyDev\AuditRoutes\Examples\Tests;
 
 use MyDev\AuditRoutes\Auditors\PermissionAuditor;
 use MyDev\AuditRoutes\Auditors\PolicyAuditor;
@@ -10,7 +10,7 @@ use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Testing\Concerns\AssertsAuditRoutes;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\TestCase;
+use MyDev\AuditRoutes\Tests\TestCase;
 
 class AuditRoutesAreAwesomeTest extends TestCase
 {

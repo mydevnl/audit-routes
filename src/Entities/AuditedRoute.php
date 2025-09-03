@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Entities;
 
-use InvalidArgumentException;
 use JsonSerializable;
 use MyDev\AuditRoutes\Contracts\AuditorInterface;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
@@ -40,9 +39,6 @@ class AuditedRoute implements Stringable, JsonSerializable
 
     /**
      * @param array<int, AuditorInterface> $auditors
-     *
-     * @throws InvalidArgumentException
-     *
      * @return self
      */
     public function audit(array $auditors): self
@@ -58,10 +54,7 @@ class AuditedRoute implements Stringable, JsonSerializable
 
             $this->score += $result;
 
-            $this->results[] = [
-                'auditor' => $auditor,
-                'result'  => $result,
-            ];
+            $this->results[] = new AuditorResult($auditor, $result);
         }
 
         return $this;

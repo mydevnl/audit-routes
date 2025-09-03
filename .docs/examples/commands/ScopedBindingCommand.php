@@ -7,7 +7,7 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
 use MyDev\AuditRoutes\Aggregators\AverageScore;
-use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
+use MyDev\AuditRoutes\Aggregators\ConditionedCount;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
 use MyDev\AuditRoutes\Auditors\ScopedBindingAuditor;
@@ -49,7 +49,7 @@ class ScopedBindingCommand extends Command
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
-            new ConditionedCumulative('Total routes'),
+            new ConditionedCount('Total routes'),
             new FailedPercentage('Unscoped rate'),
             new SuccessPercentage('Scoped rate'),
             new AverageScore('Average scoping'),

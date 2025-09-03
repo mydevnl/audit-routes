@@ -60,6 +60,10 @@ class TestingMethod implements VariableTrackerInterface, RouteOccurrenceTrackerI
             return false;
         }
 
+        if ($this->method->isStatic()) {
+            return false;
+        }
+
         return strval($this->method->getReturnType()) === 'void';
     }
 }

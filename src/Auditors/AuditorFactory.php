@@ -12,10 +12,9 @@ class AuditorFactory
     /**
      * @param class-string<AuditorInterface> | int                    $key
      * @param class-string<AuditorInterface> | AuditorInterface | int $value
+     * @return AuditorInterface
      *
      * @throws InvalidArgumentException
-     *
-     * @return AuditorInterface
      */
     public static function build(string | int $key, string | AuditorInterface | int $value): AuditorInterface
     {
@@ -27,7 +26,7 @@ class AuditorFactory
             return $key::make()->setWeight($value);
         }
 
-        if (is_int($key) && is_string($value)) {
+        if (is_string($value)) {
             return $value::make();
         }
 
@@ -36,10 +35,9 @@ class AuditorFactory
 
     /**
      * @param  array<class-string<AuditorInterface>, int> | array<int, AuditorInterface|class-string<AuditorInterface>> $auditors
+     * @return array<int, AuditorInterface>
      *
      * @throws InvalidArgumentException
-     *
-     * @return array<int, AuditorInterface>
      */
     public static function buildMany(array $auditors): array
     {

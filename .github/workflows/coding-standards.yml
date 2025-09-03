@@ -1,4 +1,4 @@
-name: "Validate PHP"
+name: "Coding standards"
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - 'linter.sh'
       - 'phpstan.neon'
       - 'phpcs.xml'
-      - '.github/workflows/validate-php.yml'
+      - '.github/workflows/coding-standards.yml'
   pull_request:
 
 jobs:

@@ -14,7 +14,6 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
-use ReflectionException;
 
 class PhpUnitMethodVisitor extends NodeVisitorAbstract
 {
@@ -26,15 +25,15 @@ class PhpUnitMethodVisitor extends NodeVisitorAbstract
     /**
      * @param ClassMethod $node
      * @return int | null
-     *
-     * @throws ReflectionException
      */
     public function enterNode(Node $node): ?int
     {
-        $actingMethods = Cast::array(Config::get('audit-routes.tests.acting-methods', []));
+        $this->registerVariables(new NodeAccessor($node));
 
-        $actingMethod = (new NodeAccessor($node))
-            ->find(fn (MethodCall $node): bool => in_array(strval($node->name), $actingMethods));
+        $actingMethods = Cast::array(Config::get('audit-routes.tests.acting-methods', []));
+        $actingMethod = (new NodeAccessor($node))->find(
+            fn (MethodCall $node): bool => in_array(strval($node->name), $actingMethods),
+        );
 
         if (is_null($actingMethod)) {
             return NodeVisitor::DONT_TRAVERSE_CHILDREN;
@@ -60,5 +59,20 @@ class PhpUnitMethodVisitor extends NodeVisitorAbstract
         );
 
         return NodeVisitor::DONT_TRAVERSE_CHILDREN;
+    }
+
+    protected function registerVariables(NodeAccessor $node): void
+    {
+        foreach ($node->filter(Node\Expr\Assign::class) as $assignNode) {
+            $name = $assignNode->find(Node\Expr\Variable::class)?->getName();
+            /** @var null | Node\Scalar\String_ $value */
+            $value = $assignNode->find(Node\Scalar\String_::class)?->getNode();
+
+            if (is_null($name) || is_null($value)) {
+                continue;
+            }
+
+            $this->tracker->declareVariable($name, $value->value);
+        }
     }
 }

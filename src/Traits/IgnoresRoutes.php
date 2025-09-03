@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyDev\AuditRoutes\Traits;
 
+use Illuminate\Support\Str;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
 
 trait IgnoresRoutes
@@ -35,21 +36,7 @@ trait IgnoresRoutes
         $allIgnoredRoutes = array_merge($this->defaultIgnoredRoutes, $this->ignoredRoutes);
 
         foreach ($allIgnoredRoutes as $ignoredRoute) {
-            if ($route->getIdentifier() === $ignoredRoute) {
-                return false;
-            }
-
-            $suffix = substr((string) $ignoredRoute, -1);
-            $ignoredRouteGroup = substr((string) $ignoredRoute, 0, -1);
-
-            if ($suffix === '*' && str_starts_with($route->getIdentifier(), $ignoredRouteGroup)) {
-                return false;
-            }
-
-            $prefix = substr((string) $ignoredRoute, 0, 1);
-            $ignoredRouteGroup = substr((string) $ignoredRoute, 1);
-
-            if ($prefix === '*' && str_ends_with($route->getIdentifier(), $ignoredRouteGroup)) {
+            if (Str::of($route->getIdentifier())->is($ignoredRoute)) {
                 return false;
             }
         }

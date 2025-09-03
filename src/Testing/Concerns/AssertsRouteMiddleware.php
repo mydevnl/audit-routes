@@ -8,7 +8,6 @@ use Closure;
 use MyDev\AuditRoutes\Auditors\MiddlewareAuditor;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
-use ReflectionException;
 
 trait AssertsRouteMiddleware
 {
@@ -23,8 +22,6 @@ trait AssertsRouteMiddleware
      * @param null | string | Closure(AuditedRouteCollection): string $message
      * @param null | Closure(RouteInterface): bool $when
      * @return static
-     *
-     * @throws ReflectionException
      */
     protected function assertRoutesHaveMiddleware(
         iterable $routes,

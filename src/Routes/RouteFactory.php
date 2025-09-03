@@ -16,10 +16,9 @@ class RouteFactory
 {
     /**
      * @param iterable<int | string, mixed> $routes
+     * @return array<int, RouteInterface>
      *
      * @throws InvalidArgumentException
-     *
-     * @return array<int, RouteInterface>
      */
     public static function collection(iterable $routes): array
     {
@@ -34,10 +33,9 @@ class RouteFactory
     /**
      * @param mixed $route
      * @param null | string | int $name
+     * @return RouteInterface
      *
      * @throws InvalidArgumentException
-     *
-     * @return RouteInterface
      */
     public static function build(mixed $route, null | string | int $name = null): RouteInterface
     {

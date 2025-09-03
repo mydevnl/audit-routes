@@ -40,7 +40,7 @@ trait Aggregateable
         return ltrim($snakeCase, '_');
     }
 
-    /** @return array<string, array<int|string, AggregatorInterface>|null|float|string> */
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         return [
@@ -50,7 +50,7 @@ trait Aggregateable
         ];
     }
 
-    /** @return array<string, array<int|string, AggregatorInterface>|null|float|string> */
+    /** @return array<string, mixed> */
     public function jsonSerialize(): array
     {
         return $this->toArray();

@@ -7,7 +7,7 @@ namespace MyDev\AuditRoutes\Examples\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Routing\Router;
 use MyDev\AuditRoutes\Aggregators\AverageScore;
-use MyDev\AuditRoutes\Aggregators\ConditionedCumulative;
+use MyDev\AuditRoutes\Aggregators\ConditionedCount;
 use MyDev\AuditRoutes\Aggregators\FailedPercentage;
 use MyDev\AuditRoutes\Aggregators\SuccessPercentage;
 use MyDev\AuditRoutes\Auditors\PhpUnitAuditor;
@@ -35,10 +35,7 @@ class PhpUnitDetailedCoverageCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * @return int
-     * @throws ReflectionException
-     */
+    /** @return int */
     public function handle(): int
     {
         $output = OutputFactory::channel($this->output)->setExporter($this->getExporter())->build();
@@ -70,7 +67,7 @@ class PhpUnitDetailedCoverageCommand extends Command
             $this->option('export'),
             $this->option('filename'),
         )?->setAggregators([
-            new ConditionedCumulative('Total routes'),
+            new ConditionedCount('Total routes'),
             new FailedPercentage('Uncovered rate'),
             new SuccessPercentage('Covered rate'),
             new AverageScore('Average coverage'),

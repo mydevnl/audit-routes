@@ -38,17 +38,6 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
     protected bool $isParsed = false;
 
     /**
-     * @return void
-     *
-     * @throws ReflectionException
-     */
-    public function __construct()
-    {
-        $directory = Cast::string(Config::get('audit-routes.tests.directory'));
-        $this->testingMethods = CollectTestingMethods::run($directory);
-    }
-
-    /**
      * @param RouteInterface $route
      * @return int
      */
@@ -56,6 +45,9 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
     {
         if (!$this->isParsed) {
             $this->isParsed = true;
+            if (empty($this->testingMethods)) {
+                $this->setTestingMethods();
+            }
 
             foreach ($this->testingMethods as $testingMethod) {
                 $this->parseTestingMethod($testingMethod);
@@ -66,10 +58,26 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
     }
 
     /**
+     * @param array<int, TestingMethod>|null $testingMethods
+     * @return $this
+     */
+    public function setTestingMethods(?array $testingMethods = null): self
+    {
+        if (is_null($testingMethods)) {
+            $directory = Cast::string(Config::get('audit-routes.tests.directory'));
+            $testingMethods = CollectTestingMethods::run($directory);
+        }
+
+        $this->testingMethods = $testingMethods;
+
+        return $this;
+    }
+
+    /**
      * @param null | array<int | string, mixed> $arguments
      * @return self
      *
-     * @throws ReflectionException
+     * @throws InvalidArgumentException
      */
     public function setArguments(?array $arguments): self
     {
@@ -78,7 +86,11 @@ class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, Rout
                 throw new InvalidArgumentException('Arguments must be an instance of Closure.');
             }
 
-            $reflection = new ReflectionFunction($argument);
+            try {
+                $reflection = new ReflectionFunction($argument);
+            } catch (ReflectionException) {
+                throw new InvalidArgumentException('Arguments closure does not exist.');
+            }
 
             if (strval($reflection->getReturnType()) !== 'bool') {
                 throw new InvalidArgumentException('Arguments closure should return a boolean.');
