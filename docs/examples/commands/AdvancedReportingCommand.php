@@ -31,7 +31,7 @@ use MyDev\AuditRoutes\Output\OutputFactory;
 
 class AdvancedReportingCommand extends Command
 {
-    protected $signature = 'route:audit {--benchmark=1000} {--export=} {--filename=}';
+    protected $signature = 'route:audit {--benchmark=75} {--export=} {--filename=}';
     protected $description = 'Advanced reporting auditing for Laravel routes';
 
     /**

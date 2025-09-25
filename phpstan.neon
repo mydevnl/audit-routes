@@ -2,11 +2,13 @@ parameters:
     level: 9
 
     paths:
+        - docs/examples
         - src
         - tests
 
     excludePaths:
         - vendor
+        - docs/examples
 
     ignoreErrors:
         - identifier: missingType.generics

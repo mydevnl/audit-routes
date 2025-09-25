@@ -9,3 +9,4 @@ composer.lock
 /.report
 /.cache
 .DS_Store
+/**/.idea/*

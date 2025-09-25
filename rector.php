@@ -15,7 +15,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src',
         __DIR__ . '/tests',
-        __DIR__ . '/.docs/examples',
+        __DIR__ . '/docs/examples',
     ])
     ->withCache(
         cacheDirectory: __DIR__ . '/.cache/rector',
