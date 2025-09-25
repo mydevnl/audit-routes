@@ -648,7 +648,7 @@ Document your custom auditors thoroughly:
  *
  * Scoring:
  * - API routes with rate limiting: +1 (multiplied by weight)
- * - API routes without rate limiting: 0 (multiplied by penalty if set)
+ * - API routes without rate limiting: 0 (or the penalty value if set)
  * - Non-API routes: +1 (neutral/not applicable)
  *
  * Configuration:

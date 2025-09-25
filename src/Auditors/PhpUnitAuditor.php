@@ -22,6 +22,28 @@ use PhpParser\Node\Stmt\ClassMethod;
 use ReflectionException;
 use ReflectionFunction;
 
+/**
+ * PhpUnit Test Coverage Auditor.
+ *
+ * Ensures routes have adequate test coverage by analyzing PHPUnit test files
+ * and detecting route usage within test methods.
+ *
+ * Scoring:
+ * - Routes tested in PHPUnit methods: +1 per test occurrence (multiplied by weight)
+ * - Routes without test coverage: 0 (or the penalty value if set)
+ * - Score can be limited using setLimit() to cap maximum points per route
+ *
+ * Configuration:
+ * - Accepts array of Closure conditions to filter which test methods to analyze
+ * - Automatically scans configured test directory for PHPUnit test files
+ * - Detects route usage via route() helper calls and string literals
+ * - Tracks variables to detect indirect route references
+ *
+ * @example
+ * PhpUnitAuditor::make()->setWeight(20)->setPenalty(-50)
+ * @example
+ * PhpUnitAuditor::make([fn(ClassMethod $method) => str_contains($method->name->name, 'integration')])
+ */
 class PhpUnitAuditor implements AuditorInterface, VariableTrackerInterface, RouteOccurrenceTrackerInterface
 {
     use Auditable;
