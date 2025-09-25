@@ -107,6 +107,9 @@ class IlluminateRoute implements RouteInterface
                     'No middleware aliases found on the Kernel.',
                 ),
             };
+
+            $aliasProperty->setAccessible(true);
+
             /** @var array<string, string> $aliases */
             $aliases = $aliasProperty->getValue($kernel);
 
