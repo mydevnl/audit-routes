@@ -9,8 +9,8 @@ use MyDev\AuditRoutes\Auditors\PolicyAuditor;
 use MyDev\AuditRoutes\Contracts\RouteInterface;
 use MyDev\AuditRoutes\Entities\AuditedRouteCollection;
 use MyDev\AuditRoutes\Testing\Concerns\AssertsAuditRoutes;
-use PHPUnit\Framework\Attributes\Test;
 use MyDev\AuditRoutes\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AuditRoutesAreAwesomeTest extends TestCase
 {

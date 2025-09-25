@@ -19,7 +19,6 @@ use MyDev\AuditRoutes\Output\OutputFactory;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt\ClassMethod;
-use ReflectionException;
 
 class PhpUnitDetailedCoverageCommand extends Command
 {

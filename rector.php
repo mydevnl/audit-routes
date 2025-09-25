@@ -8,6 +8,7 @@ use Rector\Config\RectorConfig;
 use Rector\Php56\Rector\FuncCall\PowToExpRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
+use Rector\Php81\Rector\MethodCall\RemoveReflectionSetAccessibleCallsRector;
 
 return RectorConfig::configure()
     ->withPhpSets(php81: true)
@@ -15,7 +16,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src',
         __DIR__ . '/tests',
-        __DIR__ . '/.docs/examples',
+        __DIR__ . '/docs/examples',
     ])
     ->withCache(
         cacheDirectory: __DIR__ . '/.cache/rector',
@@ -28,9 +29,10 @@ return RectorConfig::configure()
         __DIR__ . '/resources',
         __DIR__ . '/vendor',
         ClosureToArrowFunctionRector::class,
-        PowToExpRector::class,
         OptionalParametersAfterRequiredRector::class,
         NullToStrictStringFuncCallArgRector::class => [
             __DIR__ . '/config',
         ],
+        PowToExpRector::class,
+        RemoveReflectionSetAccessibleCallsRector::class,
     ]);

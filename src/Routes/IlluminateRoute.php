@@ -109,6 +109,7 @@ class IlluminateRoute implements RouteInterface
             };
 
             $aliasProperty->setAccessible(true);
+
             /** @var array<string, string> $aliases */
             $aliases = $aliasProperty->getValue($kernel);
 

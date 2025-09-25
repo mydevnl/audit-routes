@@ -8,18 +8,53 @@ This PHP Package provides a streamlined approach to gaining insights into the se
 - **Permissions:** Permission or policy checks enforce access control
 - **Middleware:** Essential middleware is applied for security and request handling
 
-Audit Routes is your new best friend for keeping your application rock-solid! Spotting potential flaws is now quicker and easier than ever.
-
-
 [![Latest Stable Version](https://poser.pugx.org/mydevnl/audit-routes/v/stable)](https://packagist.org/packages/mydevnl/audit-routes)
 [![Total Downloads](https://poser.pugx.org/mydevnl/audit-routes/downloads)](https://packagist.org/packages/mydevnl/audit-routes)
 [![Coding standards](https://github.com/mydevnl/audit-routes/actions/workflows/coding-standards.yml/badge.svg)](https://github.com/mydevnl/audit-routes/actions/workflows/coding-standards.yml)
 [![Tests](https://github.com/mydevnl/audit-routes/actions/workflows/run-tests.yml/badge.svg)](https://github.com/mydevnl/audit-routes/actions/workflows/run-tests.yml)
 [![License](https://poser.pugx.org/mydevnl/audit-routes/license)](https://packagist.org/packages/mydevnl/audit-routes)
 
-## Laravel and more supported frameworks
+Built for Laravel with extensible architecture for other PHP frameworks.
 
-This package is built for Laravel and is designed to be extendable for use with other PHP frameworks, allowing you to leverage its powerful features across a variety of frameworks.
+## Requirements
+
+- **PHP**: 8.1+
+
+## Documentation
+
+Comprehensive documentation is available to help you get the most out of Audit Routes:
+
+### Getting Started
+- **[Installation](docs/getting-started/installation.md)** - Install and set up the package
+- **[Quick Start](docs/getting-started/quick-start.md)** - Get auditing in under 5 minutes
+- **[Configuration](docs/getting-started/configuration.md)** - Customize settings and behavior
+
+### Guides
+- **[Basic Usage](docs/guides/basic-usage.md)** - Essential patterns and common scenarios
+- **[Advanced Usage](docs/guides/advanced-usage.md)** - Complex configurations and custom scoring
+- **[Custom Auditors](docs/guides/custom-auditors.md)** - Build application-specific security checks
+- **[Testing](docs/guides/testing.md)** - PHPUnit assertions and CI integration
+- **[CI Integration](docs/guides/ci-integration.md)** - Automate audits in your deployment pipeline
+- **[Troubleshooting](docs/guides/troubleshooting.md)** - Resolve common issues
+
+### Reference
+- **API Documentation**
+  - **[Assertions](docs/reference/api/assertions.md)** - Integrate route security validation directly into your test suite
+  - **[Auditors](docs/reference/api/auditors.md)** - Auditors are the core components that analyze your routes
+  - **[Commands](docs/reference/api/commands.md)** - Available Artisan Commands
+- **Architecture**
+  - **[Auditor system](docs/reference/architecture/auditor-system.md)** - How the auditor system works internally
+  - **[Overview](docs/reference/architecture/overview.md)** - Understanding the internal architecture
+- **Examples**
+  - **[Integrations](docs/reference/examples/integrations.md)** -  Integrating with popular PHP frameworks
+  - **[Real world](docs/reference/examples/real-world.md)** -  Real-world implementation examples
+
+### Community
+- **[FAQ](docs/community/faq.md)** - Frequently asked questions
+- **[Resources](docs/community/resources.md)** - Additional tools and resources
+
+### Quick Reference
+- **[Quick Reference](docs/quick-reference.md)** - Fast reference for commands and common patterns
 
 ## Installation
 
@@ -35,110 +70,102 @@ Optionally publish the configuration file:
 php artisan vendor:publish --tag=audit-routes-config
 ```
 
-## Usage
+## Quick Start
 
-Once installed, setting up custom commands is a breeze. The package provides flexible options that allow you to tailor your route audits to fit your application's specific needs.
+Get your first audit running in seconds:
+
+```bash
+# Run a basic security audit
+php artisan route:audit -vv
+
+# Generate a detailed HTML report
+php artisan route:audit-report
+
+# Check authentication coverage
+php artisan route:audit-auth -vv
+```
+
+For programmatic usage:
 
 ```php
-AuditRoutes::for($this->router->getRoutes()->getRoutes())
-    ->setBenchmark(1000)
+use MyDev\AuditRoutes\AuditRoutes;
+use MyDev\AuditRoutes\Auditors\PolicyAuditor;
+use MyDev\AuditRoutes\Auditors\MiddlewareAuditor;
+
+$result = AuditRoutes::for($router->getRoutes())
+    ->setBenchmark(50)
     ->run([
-        PolicyAuditor::class => 10,
-        PermissionAuditor::class => -10,
-        PhpUnitAuditor::make()
-            ->setLimit(100)
-            ->setPenalty(-100)
-            ->setWeight(10),
+        PolicyAuditor::make()->setWeight(25),
+        MiddlewareAuditor::make(['auth'])->setWeight(20),
     ]);
 ```
 
-## Default commands
+## How It Works
 
-To help you get started, default commands have been included to demonstrate how to leverage these options effectively.
+Audit Routes uses a **scoring system** to evaluate route security:
 
-Check out the `.docs/examples` directory.
+- **Built-in Auditors**: PolicyAuditor, MiddlewareAuditor, PhpUnitAuditor, and more
+- **Configurable Weights**: Customize importance of different security aspects
+- **Benchmark System**: Set minimum scores for compliance (routes below benchmark are flagged)
+- **Multiple Outputs**: Console, HTML reports, JSON exports for different workflows
 
-### 📦 Output options
+Learn more about the [Architecture](docs/reference/architecture/overview.md) and [Auditor System](docs/reference/architecture/auditor-system.md).
 
-The route auditor supports multiple output formats to suit different use cases:
+## Available Commands
 
-- **Verbose Console Output** – Detailed audit results printed directly to the terminal.
-- **HTML Export** – Generate styled, shareable audit reports.
-- **JSON Export** – Easily consume audit data in tools or scripts.
-- **Custom Benchmarks** – Define and include application-specific metrics.
+The package provides several built-in commands to help you get started quickly:
 
-You can also extend the system using **data aggregators**, which let you plug in custom logic to enrich reports with detailed, context-aware insights.
+- **`route:audit`** - Comprehensive route security analysis
+- **`route:audit-report`** - Generate detailed HTML audit reports
+- **`route:audit-test-coverage`** - Analyze test coverage for routes
+- **`route:audit-auth`** - Focus on authentication middleware analysis
 
+For detailed usage examples and command-line options, see the [Basic Usage Guide](docs/guides/basic-usage.md#command-line-options).
 
-```bash
-php artisan route:audit -vv --benchmark 500 --export html --filename report.html
-```
-
-### 📊 Data Exports & Insights
-
-Audit reports are built and exported as HTML by combining multiple HTML exports, each responsible for analyzing a specific aspect of your application's routes.
-
-A **default report** is included, offering an opinionated configuration that serves as both a sensible starting point and a practical example of how commands can be orchestrated together.
-
-You’re free to modify, extend, or build entirely custom reports tailored to your needs—giving you full control over what gets audited and how results are presented.
-
+### Quick Reference
 
 ```bash
+# Basic audit with detailed output
+php artisan route:audit -vv
+
+# High security standards
+php artisan route:audit --benchmark 75 -vv
+
+# Generate HTML report
 php artisan route:audit-report
+
+# Check authentication coverage
+php artisan route:audit-auth -vv
+
+# Verify test coverage
+php artisan route:audit-test-coverage --benchmark 1 -vv
+
+# Export results for CI/CD
+php artisan route:audit --benchmark 50 --export json --filename security-audit.json
 ```
 
-### Test Coverage
+## Testing Integration
 
-Verify that each route is covered by tests and gain insights into the average number of tests per route.
+The package includes PHPUnit assertions for integrating route security checks directly into your test suite. Use the `AssertsAuditRoutes` trait to enforce security standards as part of your CI/CD pipeline.
 
-Supports verbose output, HTML and JSON exports, and customizable benchmarks.
+See the [Testing Guide](docs/guides/testing.md) for comprehensive examples and best practices.
 
-```bash
-php artisan route:audit-test-coverage -vv --benchmark 1 --export html --filename test.html
-```
+## Troubleshooting
 
-### Authentication Middleware
+**Common issues:**
+- **No routes found?** Ensure your Laravel application has defined routes and clear route cache: `php artisan route:clear`
+- **Permission errors?** Check that `storage/exports/audit-routes/` is writable: `chmod -R 775 storage/`
+- **Configuration issues?** Verify your `config/audit-routes.php` settings match your project structure
 
-Quickly identify which routes require authentication and which do not.
-
-Supports verbose output, HTML and JSON exports.
-
-```bash
-php artisan route:audit-auth -vv --export html --filename auth.html
-```
-
-## Testing
-
-The package comes with built-in assertions that you can use within PHPUnit by using the `AssertsAuditRoutes` trait. This allows you to run route security checks and audit compliance as part of your continuous integration pipeline.
-Note that Pest support will be added in the near future.
-
-Some examples:
-
-```php
-// Assert that all routes, or a specified array of routes, are covered in tests.
-$this->assertRoutesAreTested(['*']);
-
-// Assert a specific route to be covered in tests.
-$this->assertRouteIsTested('welcome');
-
-// Assert that multiple routes are implemented with the specified middleware, while allowing certain routes to be excluded.
-$this->assertRoutesHaveMiddleware(['*'], ['auth'], ignoredRoutes: ['welcome', 'api.*']);
-
-// Assert that a specific route is implemented with the specified middleware.
-$this->assertRouteHasMiddleware('api.user.index', ['auth:sanctum']);
-
-// Ensure that all specified routes return an OK status when evaluated with custom auditors.
-$this->assertAuditRoutesOk($routes, [PolicyAuditor::make()], $message, benchmark: 1);
-
-// Use negative weight to assert that custom auditors are not applied to given routes.
-$this->assertAuditRoutesOk(['*'], [PermissionAuditor::make()->setWeight(-1)], $message);
-```
+For detailed troubleshooting and solutions, see the [Troubleshooting Guide](docs/guides/troubleshooting.md) or [FAQ](docs/community/faq.md).
 
 ## Contributing
 
-We welcome contributions to this project! If you have ideas for improvements or find bugs, please submit them as issues on GitHub. Contributions should be based on issues that are labeled as "accepted for fix." We highly appreciate and encourage community participation.
+We welcome contributions to this project! If you have ideas for improvements or find bugs, please submit them as issues on GitHub. We highly appreciate and encourage community participation.
 
 For additional help or questions, feel free to reach out via GitHub issues.
+
+Learn more about [contributing](CONTRIBUTING.md).
 
 ## Security Vulnerabilities
 
@@ -153,4 +180,4 @@ This package is open-sourced software licensed under the [MIT license](LICENSE.m
 Please be aware that the most stable release is an beta release and may be unstable.
 The roadmap will be published soon. Follow [mydevnl](https://github.com/mydevnl) to stay updated!
 
-May your routes be flawless! 🎉
+May your routes be flawless! 🔒✨

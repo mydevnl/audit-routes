@@ -2,6 +2,7 @@
 composer.lock
 .env
 .env.testing
+.gitconfig
 .phpunit.result.cache
 .php-cs-fixer.cache
 /.idea
@@ -9,3 +10,4 @@ composer.lock
 /.report
 /.cache
 .DS_Store
+/**/.idea/*
